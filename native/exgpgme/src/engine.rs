@@ -1,20 +1,20 @@
 use gpgme::engine::EngineInfo;
-use rustler::{NifTerm, NifEnv, NifEncoder};
+use rustler::{Term, Env, Encoder};
 use rustler::types::elixir_struct;
 use std::str::Utf8Error;
 use protocol;
 
 mod atoms {
-    rustler_atoms! {
-        atom protocol;
-        atom path;
-        atom home_dir;
-        atom version;
-        atom required_version;
+    rustler::atoms! {
+        protocol,
+        path,
+        home_dir,
+        version,
+        required_version,
     }
 }
 
-fn get_engine_info<'a>(value: Result<&str, Option<Utf8Error>>, env: NifEnv<'a>) -> Result<NifTerm<'a>, Utf8Error> {
+fn get_engine_info<'a>(value: Result<&str, Option<Utf8Error>>, env: Env<'a>) -> Result<Term<'a>, Utf8Error> {
     match value {
         Ok(result) => Ok(String::from(result).encode(env)),
         Err(None) => Ok(String::new().encode(env)),
@@ -22,7 +22,7 @@ fn get_engine_info<'a>(value: Result<&str, Option<Utf8Error>>, env: NifEnv<'a>) 
     }
 }
 
-pub fn engine_info_to_term<'a>(engine_info: EngineInfo, env: NifEnv<'a>) -> Result<NifTerm<'a>, Utf8Error> {
+pub fn engine_info_to_term<'a>(engine_info: EngineInfo, env: Env<'a>) -> Result<Term<'a>, Utf8Error> {
     let protocol_atom = atoms::protocol().encode(env);
     let path_atom = atoms::path().encode(env);
     let home_dir_atom = atoms::home_dir().encode(env);

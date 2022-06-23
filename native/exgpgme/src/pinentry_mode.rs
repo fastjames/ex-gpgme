@@ -1,20 +1,20 @@
 use gpgme::PinentryMode;
-use rustler::{NifTerm, NifEnv, NifEncoder, NifError};
+use rustler::{Term, Env, Encoder, Error};
 use rustler::TermType;
 use rustler::types::tuple;
 
 mod atoms {
-    rustler_atoms! {
-        atom default;
-        atom ask;
-        atom cancel;
-        atom error;
-        atom loopback;
-        atom other;
+    rustler::atoms! {
+        default,
+        ask,
+        cancel,
+        error,
+        loopback,
+        other,
     }
 }
 
-pub fn pinentry_mode_to_term<'a>(pinentry_mode: PinentryMode, env: NifEnv<'a>) -> NifTerm<'a> {
+pub fn pinentry_mode_to_term<'a>(pinentry_mode: PinentryMode, env: Env<'a>) -> Term<'a> {
     match pinentry_mode {
         PinentryMode::Default => atoms::default().encode(env),
         PinentryMode::Ask => atoms::ask().encode(env),
@@ -25,7 +25,7 @@ pub fn pinentry_mode_to_term<'a>(pinentry_mode: PinentryMode, env: NifEnv<'a>) -
     }
 }
 
-pub fn arg_to_pinentry_mode(arg: NifTerm) -> Result<PinentryMode, NifError> {
+pub fn arg_to_pinentry_mode(arg: Term) -> Result<PinentryMode, Error> {
     match arg.get_type() {
         TermType::Atom => {
             let input_protocol = arg.atom_to_string()?;
@@ -35,7 +35,7 @@ pub fn arg_to_pinentry_mode(arg: NifTerm) -> Result<PinentryMode, NifError> {
                 "cancel" => Ok(PinentryMode::Cancel),
                 "error" => Ok(PinentryMode::Error),
                 "loopback" => Ok(PinentryMode::Loopback),
-                _ => Err(NifError::BadArg)
+                _ => Err(Error::BadArg)
             }
         },
         TermType::Tuple => {
@@ -45,9 +45,9 @@ pub fn arg_to_pinentry_mode(arg: NifTerm) -> Result<PinentryMode, NifError> {
             if name == "other" {
                 Ok(PinentryMode::Other(other))
             } else {
-                Err(NifError::BadArg)
+                Err(Error::BadArg)
             }
         },
-        _ => Err(NifError::BadArg)
+        _ => Err(Error::BadArg)
     }
 }

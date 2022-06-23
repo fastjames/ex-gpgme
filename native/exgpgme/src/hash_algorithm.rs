@@ -1,28 +1,28 @@
-use rustler::{NifEnv, NifTerm, NifEncoder};
+use rustler::{Env, Term, Encoder};
 use gpgme::HashAlgorithm;
 
 mod atoms {
-    rustler_atoms! {
-        atom none;
-        atom md2;
-        atom md4;
-        atom md5;
-        atom sha1;
-        atom sha224;
-        atom sha256;
-        atom sha384;
-        atom sha512;
-        atom ripe_md160;
-        atom tiger;
-        atom haval;
-        atom crc32;
-        atom crc32_rfc1510;
-        atom crc24_rfc2440;
-        atom other;
+    rustler::atoms! {
+        none,
+        md2,
+        md4,
+        md5,
+        sha1,
+        sha224,
+        sha256,
+        sha384,
+        sha512,
+        ripe_md160,
+        tiger,
+        haval,
+        crc32,
+        crc32_rfc1510,
+        crc24_rfc2440,
+        other,
     }
 }
 
-pub fn transform_hash_algorithm<'a>(env: NifEnv<'a>, algorithm: HashAlgorithm) -> NifTerm<'a> {
+pub fn transform_hash_algorithm<'a>(env: Env<'a>, algorithm: HashAlgorithm) -> Term<'a> {
     match algorithm {
         HashAlgorithm::None => atoms::none().encode(env),
         HashAlgorithm::Md2 => atoms::md2().encode(env),

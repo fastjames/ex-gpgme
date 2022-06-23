@@ -1,29 +1,29 @@
-use rustler::{NifEnv, NifTerm, NifEncoder};
+use rustler::{Env, Term, Encoder};
 use gpgme::results::ImportResult;
 use rustler::types::elixir_struct;
 
 use ::results::import::transform_import;
 
 mod atoms {
-    rustler_atoms! {
-        atom considered;
-        atom without_user_id;
-        atom imported;
-        atom imported_rsa;
-        atom unchanged;
-        atom new_user_ids;
-        atom new_subkeys;
-        atom new_signatures;
-        atom new_revocations;
-        atom secret_considered;
-        atom secret_imported;
-        atom secret_unchanged;
-        atom not_imported;
-        atom imports;
+    rustler::atoms! {
+        considered,
+        without_user_id,
+        imported,
+        imported_rsa,
+        unchanged,
+        new_user_ids,
+        new_subkeys,
+        new_signatures,
+        new_revocations,
+        secret_considered,
+        secret_imported,
+        secret_unchanged,
+        not_imported,
+        imports,
     }
 }
 
-pub fn transform_import_result<'a>(env: NifEnv<'a>, result: ImportResult) -> NifTerm<'a> {
+pub fn transform_import_result<'a>(env: Env<'a>, result: ImportResult) -> Term<'a> {
     let considered_atom = atoms::considered().encode(env);
     let without_user_id_atom = atoms::without_user_id().encode(env);
     let imported_atom = atoms::imported().encode(env);
@@ -38,7 +38,7 @@ pub fn transform_import_result<'a>(env: NifEnv<'a>, result: ImportResult) -> Nif
     let secret_unchanged_atom = atoms::secret_unchanged().encode(env);
     let not_imported_atom = atoms::not_imported().encode(env);
     let imports_atom = atoms::imports().encode(env);
-    let imports: Vec<NifTerm<'a>> = result.imports()
+    let imports: Vec<Term<'a>> = result.imports()
         .map(| import | {
             transform_import(env, import)
         })

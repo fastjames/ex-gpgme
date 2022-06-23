@@ -1,24 +1,24 @@
-use rustler::{NifEnv, NifTerm, NifEncoder, NifError};
+use rustler::{Env, Term, Encoder, Error};
 use rustler::TermType;
 use rustler::types::tuple;
 use gpgme::{Protocol};
 
 mod atoms {
-    rustler_atoms! {
-        atom open_pgp;
-        atom cms;
-        atom gpg_conf;
-        atom assuan;
-        atom g13;
-        atom ui_server;
-        atom spawn;
-        atom default;
-        atom unknown;
-        atom other;
+    rustler::atoms! {
+        open_pgp,
+        cms,
+        gpg_conf,
+        assuan,
+        g13,
+        ui_server,
+        spawn,
+        default,
+        unknown,
+        other,
     }
 }
 
-pub fn arg_to_protocol(arg: NifTerm) -> Result<Protocol, NifError> {
+pub fn arg_to_protocol(arg: Term) -> Result<Protocol, Error> {
     match arg.get_type() {
         TermType::Atom => {
             let input_protocol = arg.atom_to_string()?;
@@ -32,7 +32,7 @@ pub fn arg_to_protocol(arg: NifTerm) -> Result<Protocol, NifError> {
                 "spawn" => Ok(Protocol::Spawn),
                 "default" => Ok(Protocol::Default),
                 "unknown" => Ok(Protocol::Unknown),
-                _ => Err(NifError::BadArg)
+                _ => Err(Error::BadArg)
             }
         },
         TermType::Tuple => {
@@ -42,14 +42,14 @@ pub fn arg_to_protocol(arg: NifTerm) -> Result<Protocol, NifError> {
             if name == "other" {
                 Ok(Protocol::Other(other))
             } else {
-                Err(NifError::BadArg)
+                Err(Error::BadArg)
             }
         },
-        _ => Err(NifError::BadArg)
+        _ => Err(Error::BadArg)
     }
 }
 
-pub fn protocol_to_nif(env: NifEnv, protocol: Protocol) -> NifTerm {
+pub fn protocol_to_nif(env: Env, protocol: Protocol) -> Term {
     match protocol {
         Protocol::OpenPgp => atoms::open_pgp().encode(env),
         Protocol::Cms => atoms::cms().encode(env),

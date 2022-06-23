@@ -12,8 +12,8 @@ defmodule ExGpgme.Mixfile do
       deps: deps(),
       description: description(),
       package: package(),
-      compilers: [:rustler] ++ Mix.compilers,
-      rustler_crates: rustler_crates(),
+      # compilers: [:rustler] ++ Mix.compilers,
+      # rustler_crates: rustler_crates(),
       dialyzer: [ignore_warnings: "dialyzer.ignore-warnings"],
     ]
   end
@@ -42,20 +42,20 @@ defmodule ExGpgme.Mixfile do
 
   defp deps do
     [
-      {:rustler, "~> 0.10.1"},
+      {:rustler, "~> 0.25.0"},
       {:ex_doc, ">= 0.0.0", only: [:dev, :test], runtime: false},
-      {:inch_ex, only: :docs, runtime: false},
-      {:credo, "~> 0.5", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 0.4", only: [:dev, :test], runtime: false},
+      {:inch_ex, ">= 0.0.0", only: :docs, runtime: false},
+      {:credo, "~> 1.6.4", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
     ]
   end
 
-  defp rustler_crates do
-    [
-      exgpgme: [
-        path: "native/exgpgme",
-        mode: (if Mix.env == :prod, do: :release, else: :debug),
-      ],
-    ]
-  end
+  # defp rustler_crates do
+  #   [
+  #     exgpgme: [
+  #       path: "native/exgpgme",
+  #       mode: (if Mix.env == :prod, do: :release, else: :debug),
+  #     ],
+  #   ]
+  # end
 end

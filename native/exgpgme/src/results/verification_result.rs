@@ -1,4 +1,4 @@
-use rustler::{NifEnv, NifTerm, NifEncoder};
+use rustler::{Env, Term, Encoder};
 use gpgme::results::VerificationResult;
 use rustler::types::elixir_struct;
 use std::str::Utf8Error;
@@ -6,19 +6,19 @@ use std::str::Utf8Error;
 use ::results::signature::transform_signature;
 
 mod atoms {
-    rustler_atoms! {
-        atom filename;
-        atom signatures;
+    rustler::atoms! {
+        filename,
+        signatures,
     }
 }
 
-pub fn transform_verification_result<'a>(env: NifEnv<'a>, verification_result: VerificationResult) -> Result<NifTerm<'a>, Utf8Error> {
+pub fn transform_verification_result<'a>(env: Env<'a>, verification_result: VerificationResult) -> Result<Term<'a>, Utf8Error> {
     let filename_atom = atoms::filename().encode(env);
     let signatures_atom = atoms::signatures().encode(env);
 
     let filename = string_or_null!(verification_result.filename(), env)?;
 
-    let signatures: NifTerm = verification_result.signatures()
+    let signatures: Term = verification_result.signatures()
         .map(| signature | {
             transform_signature(env, signature)
         })

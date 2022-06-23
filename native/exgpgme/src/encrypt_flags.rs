@@ -1,9 +1,9 @@
-use rustler::{NifError};
-use rustler::types::list::NifListIterator;
+use rustler::{Error};
+use rustler::types::list::ListIterator;
 use gpgme;
 use gpgme::EncryptFlags;
 
-pub fn arg_to_protocol(atoms: NifListIterator) -> Result<EncryptFlags, NifError> {
+pub fn arg_to_protocol(atoms: ListIterator) -> Result<EncryptFlags, Error> {
     let mut flags = EncryptFlags::empty();
 
     for atom in atoms {
@@ -15,7 +15,7 @@ pub fn arg_to_protocol(atoms: NifListIterator) -> Result<EncryptFlags, NifError>
     Ok(flags)
 }
 
-pub fn string_to_flag(name: String) -> Result<EncryptFlags, NifError> {
+pub fn string_to_flag(name: String) -> Result<EncryptFlags, Error> {
     match name.as_ref() {
       "always_trust" => Ok(gpgme::ENCRYPT_ALWAYS_TRUST),
       "expect_sign" => Ok(gpgme::ENCRYPT_EXPECT_SIGN),
@@ -25,6 +25,6 @@ pub fn string_to_flag(name: String) -> Result<EncryptFlags, NifError> {
       "symmetric" => Ok(gpgme::ENCRYPT_SYMMETRIC),
       "throw_keyids" => Ok(gpgme::ENCRYPT_THROW_KEYIDS),
       "wrap" => Ok(gpgme::ENCRYPT_WRAP),
-      _ => Err(NifError::BadArg)
+      _ => Err(Error::BadArg)
     }
 }

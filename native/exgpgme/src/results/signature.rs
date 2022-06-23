@@ -1,4 +1,4 @@
-use rustler::{NifEnv, NifTerm, NifEncoder};
+use rustler::{Env, Term, Encoder};
 use gpgme::results::Signature;
 use std::time::UNIX_EPOCH;
 use rustler::types::elixir_struct;
@@ -12,25 +12,25 @@ use hash_algorithm::transform_hash_algorithm;
 use keys::wrap_key;
 
 mod atoms {
-    rustler_atoms! {
-        atom fingerprint;
-        atom status;
-        atom valid;
-        atom invalid;
-        atom creation_time;
-        atom expiration_time;
-        atom never_expires;
-        atom is_wrong_key_usage;
-        atom verified_by_chain;
-        atom pka_trust;
-        atom pka_address;
-        atom validity;
-        atom nonvalidity_reason;
-        atom key_algorithm;
-        atom hash_algorithm;
-        atom policy_url;
-        atom notations;
-        atom key;
+    rustler::atoms! {
+        fingerprint,
+        status,
+        valid,
+        invalid,
+        creation_time,
+        expiration_time,
+        never_expires,
+        is_wrong_key_usage,
+        verified_by_chain,
+        pka_trust,
+        pka_address,
+        validity,
+        nonvalidity_reason,
+        key_algorithm,
+        hash_algorithm,
+        policy_url,
+        notations,
+        key,
     }
 }
 
@@ -41,7 +41,7 @@ macro_rules! nif_or_nil {
     });
 }
 
-pub fn transform_signature<'a>(env: NifEnv<'a>, signature: Signature) -> Result<NifTerm<'a>, Utf8Error> {
+pub fn transform_signature<'a>(env: Env<'a>, signature: Signature) -> Result<Term<'a>, Utf8Error> {
     let fingerprint_atom = atoms::fingerprint().encode(env);
     let status_atom = atoms::status().encode(env);
     let creation_time_atom = atoms::creation_time().encode(env);

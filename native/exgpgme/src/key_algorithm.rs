@@ -1,23 +1,23 @@
-use rustler::{NifEnv, NifTerm, NifEncoder};
+use rustler::{Env, Term, Encoder};
 use gpgme::KeyAlgorithm;
 
 mod atoms {
-    rustler_atoms! {
-        atom rsa;
-        atom rsa_encrypt;
-        atom rsa_sign;
-        atom elgamal_encrypt;
-        atom dsa;
-        atom ecc;
-        atom elgamal;
-        atom ecdsa;
-        atom ecdh;
-        atom eddsa;
-        atom other;
+    rustler::atoms! {
+        rsa,
+        rsa_encrypt,
+        rsa_sign,
+        elgamal_encrypt,
+        dsa,
+        ecc,
+        elgamal,
+        ecdsa,
+        ecdh,
+        eddsa,
+        other,
     }
 }
 
-pub fn transform_key_algorithm<'a>(env: NifEnv<'a>, algorithm: KeyAlgorithm) -> NifTerm<'a> {
+pub fn transform_key_algorithm<'a>(env: Env<'a>, algorithm: KeyAlgorithm) -> Term<'a> {
     match algorithm {
         KeyAlgorithm::Rsa => atoms::rsa().encode(env),
         KeyAlgorithm::RsaEncrypt => atoms::rsa_encrypt().encode(env),
