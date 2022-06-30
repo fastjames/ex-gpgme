@@ -32,12 +32,12 @@ pub fn from_protocol<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>>
     Ok((atoms::ok(), resource::wrap_context(context)).encode(env))
 }
 
-context_getter!(protocol, context, env, { protocol::protocol_to_nif(env, context.protocol()) });
-context_getter!(offline, context, env, { context.offline().encode(env) });
+context_getter!(protocol, context, env, protocol::protocol_to_nif(env, context.protocol()));
+context_getter!(offline, context, env, context.offline().encode(env));
 context_setter!(set_offline, context, env, yes, bool, { context.set_offline(yes) });
-context_getter!(text_mode, context, env, { context.text_mode().encode(env) });
+context_getter!(text_mode, context, env, context.text_mode().encode(env));
 context_setter!(set_text_mode, context, env, yes, bool, { context.set_text_mode(yes) });
-context_getter!(armor, context, env, { context.armor().encode(env) });
+context_getter!(armor, context, env, context.armor().encode(env));
 context_setter!(set_armor, context, env, yes, bool, { context.set_armor(yes) });
 
 // pub fn get_flag<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
@@ -45,7 +45,7 @@ context_setter!(set_armor, context, env, yes, bool, { context.set_armor(yes) });
 pub fn get_flag<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
     unpack_immutable_context!(context, args[0]);
 
-    let name: String = try!(args[1].decode());
+    let name: String = args[1].decode()?;
 
     match context.get_flag(name) {
         Ok(result) => Ok((atoms::ok(), String::from(result)).encode(env)),
@@ -57,8 +57,8 @@ pub fn get_flag<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
 pub fn set_flag<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
     unpack_mutable_context!(context, args[0]);
 
-    let name: String = try!(args[1].decode());
-    let value: String = try!(args[2].decode());
+    let name: String = args[1].decode()?;
+    let value: String = args[2].decode()?;
 
     try_gpgme!(context.set_flag(name, value), env);
 
@@ -75,7 +75,7 @@ context_getter!(engine_info, context, env, {
 context_setter!(set_engine_path, context, env, path, String, { try_gpgme!(context.set_engine_path(path), env) });
 context_setter!(set_engine_home_dir, context, env, home_dir, String, { try_gpgme!(context.set_engine_home_dir(home_dir), env) });
 
-context_getter!(pinentry_mode, context, env, { pinentry_mode::pinentry_mode_to_term(context.pinentry_mode(), env) });
+context_getter!(pinentry_mode, context, env, pinentry_mode::pinentry_mode_to_term(context.pinentry_mode(), env));
 
 #[rustler::nif]
 pub fn set_pinentry_mode<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
@@ -94,7 +94,7 @@ pub fn set_pinentry_mode<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<
 pub fn import<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
     unpack_mutable_context!(context, args[0]);
 
-    let data: String = try!(args[1].decode());
+    let data: String = args[1].decode()?;
 
     let result = try_gpgme!(context.import(data), env);
 
@@ -107,7 +107,7 @@ pub fn import<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
 pub fn find_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
     unpack_immutable_context!(context, args[0]);
 
-    let fingerprint: String = try!(args[1].decode());
+    let fingerprint: String = args[1].decode()?;
 
     let result = try_gpgme!(context.find_key(fingerprint), env);
 
@@ -156,7 +156,7 @@ pub fn sign_and_encrypt_with_flags<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifRe
 pub fn delete_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
     unpack_mutable_context!(context, args[0]);
 
-    let key_arc = try!(args[1].decode::<ResourceArc<keys::KeyResource>>());
+    let key_arc = args[1].decode::<ResourceArc<keys::KeyResource>>()?;
     let key_ref = key_arc.deref();
     let key: &Key = &key_ref.key;
 
@@ -171,7 +171,7 @@ pub fn delete_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
 pub fn delete_secret_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
     unpack_mutable_context!(context, args[0]);
 
-    let key_arc = try!(args[1].decode::<ResourceArc<keys::KeyResource>>());
+    let key_arc = args[1].decode::<ResourceArc<keys::KeyResource>>()?;
     let key_ref = key_arc.deref();
     let key: &Key = &key_ref.key;
 
@@ -186,7 +186,7 @@ pub fn delete_secret_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<
 pub fn decrypt<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
     unpack_mutable_context!(context, args[0]);
 
-    let cyphertext: String = try!(args[1].decode::<String>());//.into_bytes();
+    let cyphertext: String = args[1].decode::<String>()?;//.into_bytes();
 
     let mut cleartext: Vec<u8> = Vec::new();
 
