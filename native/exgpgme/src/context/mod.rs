@@ -24,8 +24,12 @@ mod atoms {
     }
 }
 
-pub fn from_protocol<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    let protocol = protocol::arg_to_protocol(args[0])?;
+// ok, so we need to convert args to the actual args
+// it worked! Now to replicate it
+
+#[rustler::nif]
+pub fn from_protocol<'a>(env: Env<'a>, protocolStr: Term) -> NifResult<Term<'a>> {
+    let protocol = protocol::arg_to_protocol(protocolStr)?;
 
     let context = try_gpgme!(Context::from_protocol(protocol), env);
 
@@ -40,12 +44,9 @@ context_setter!(set_text_mode, context, env, yes, bool, { context.set_text_mode(
 context_getter!(armor, context, env, context.armor().encode(env));
 context_setter!(set_armor, context, env, yes, bool, { context.set_armor(yes) });
 
-// pub fn get_flag<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
 #[rustler::nif]
-pub fn get_flag<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_immutable_context!(context, args[0]);
-
-    let name: String = args[1].decode()?;
+pub fn get_flag<'a>(env: Env<'a>, contextArgs: Term, name: String) -> NifResult<Term<'a>> {
+    unpack_immutable_context!(context, contextArgs);
 
     match context.get_flag(name) {
         Ok(result) => Ok((atoms::ok(), String::from(result)).encode(env)),
@@ -54,11 +55,8 @@ pub fn get_flag<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
 }
 
 #[rustler::nif]
-pub fn set_flag<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_mutable_context!(context, args[0]);
-
-    let name: String = args[1].decode()?;
-    let value: String = args[2].decode()?;
+pub fn set_flag<'a>(env: Env<'a>, contextArgs: Term, name: String, value: String) -> NifResult<Term<'a>> {
+    unpack_mutable_context!(context, contextArgs);
 
     try_gpgme!(context.set_flag(name, value), env);
 
@@ -77,11 +75,12 @@ context_setter!(set_engine_home_dir, context, env, home_dir, String, { try_gpgme
 
 context_getter!(pinentry_mode, context, env, pinentry_mode::pinentry_mode_to_term(context.pinentry_mode(), env));
 
+// pub fn set_pinentry_mode<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
 #[rustler::nif]
-pub fn set_pinentry_mode<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_mutable_context!(context, args[0]);
+pub fn set_pinentry_mode<'a>(env: Env<'a>, contextArgs: Term, pinentryModeArg: Term) -> NifResult<Term<'a>> {
+    unpack_mutable_context!(context, contextArgs);
 
-    let mode = pinentry_mode::arg_to_pinentry_mode(args[1])?;
+    let mode = pinentry_mode::arg_to_pinentry_mode(pinentryModeArg)?;
 
     try_gpgme!(context.set_pinentry_mode(mode), env);
 
@@ -91,10 +90,8 @@ pub fn set_pinentry_mode<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<
 #[rustler::nif(
     schedule="DirtyIo"
 )]
-pub fn import<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_mutable_context!(context, args[0]);
-
-    let data: String = args[1].decode()?;
+pub fn import<'a>(env: Env<'a>, contextArg: Term, data: String) -> NifResult<Term<'a>> {
+    unpack_mutable_context!(context, contextArg);
 
     let result = try_gpgme!(context.import(data), env);
 
@@ -104,12 +101,9 @@ pub fn import<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
 #[rustler::nif(
     schedule="DirtyIo"
 )]
-pub fn find_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_immutable_context!(context, args[0]);
-
-    let fingerprint: String = args[1].decode()?;
-
-    let result = try_gpgme!(context.find_key(fingerprint), env);
+pub fn find_key<'a>(env: Env<'a>, contextArg: Term, fingerprint: String) -> NifResult<Term<'a>> {
+    unpack_immutable_context!(context, contextArg);
+    let result = try_gpgme!(context.get_key(fingerprint), env);
 
     Ok((atoms::ok(), keys::wrap_key(result)).encode(env))
 }
@@ -117,15 +111,13 @@ pub fn find_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
 #[rustler::nif(
     schedule="DirtyIo"
 )]
-pub fn encrypt_with_flags<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_mutable_context!(context, args[0]);
-    unpack_key_list!(recipients, args[1]);
+pub fn encrypt_with_flags<'a>(env: Env<'a>, contextArg: Term, keyList: Term, data: String, flagsArg: Term) -> NifResult<Term<'a>> {
+    unpack_mutable_context!(context, contextArg);
+    unpack_key_list!(recipients, keyList);
 
     keys::keys_not_empty(recipients.len())?;
 
-    let data: String = args[2].decode()?;
-
-    let flags: EncryptFlags = encrypt_flags::arg_to_protocol(args[3].decode::<ListIterator>()?)?;
+    let flags: EncryptFlags = encrypt_flags::arg_to_protocol(flagsArg.decode::<ListIterator>()?)?;
 
     let mut cyphertext: Vec<u8> = Vec::new();
     try_gpgme!(context.encrypt_with_flags(recipients, data, &mut cyphertext, flags), env);
@@ -134,15 +126,13 @@ pub fn encrypt_with_flags<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term
 }
 
 #[rustler::nif]
-pub fn sign_and_encrypt_with_flags<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_mutable_context!(context, args[0]);
-    unpack_key_list!(recipients, args[1]);
+pub fn sign_and_encrypt_with_flags<'a>(env: Env<'a>, contextArg: Term, keyList: Term, data: String, flagsArg: Term ) -> NifResult<Term<'a>> {
+    unpack_mutable_context!(context, contextArg);
+    unpack_key_list!(recipients, keyList);
 
     keys::keys_not_empty(recipients.len())?;
 
-    let data: String = args[2].decode()?;
-
-    let flags: EncryptFlags = encrypt_flags::arg_to_protocol(args[3].decode::<ListIterator>()?)?;
+    let flags: EncryptFlags = encrypt_flags::arg_to_protocol(flagsArg.decode::<ListIterator>()?)?;
 
     let mut cyphertext: Vec<u8> = Vec::new();
     try_gpgme!(context.sign_and_encrypt_with_flags(recipients, data, &mut cyphertext, flags), env);
@@ -153,11 +143,11 @@ pub fn sign_and_encrypt_with_flags<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifRe
 #[rustler::nif(
     schedule="DirtyIo"
 )]
-pub fn delete_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_mutable_context!(context, args[0]);
+pub fn delete_key<'a>(env: Env<'a>, contextArg: Term, keyArcArg: Term) -> NifResult<Term<'a>> {
+    unpack_mutable_context!(context, contextArg);
 
-    let key_arc = args[1].decode::<ResourceArc<keys::KeyResource>>()?;
-    let key_ref = key_arc.deref();
+    let keyArc = keyArcArg.decode::<ResourceArc<keys::KeyResource>>()?;
+    let key_ref = keyArc.deref();
     let key: &Key = &key_ref.key;
 
     try_gpgme!(context.delete_key(key), env);
@@ -168,11 +158,11 @@ pub fn delete_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
 #[rustler::nif(
     schedule="DirtyIo"
 )]
-pub fn delete_secret_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_mutable_context!(context, args[0]);
+pub fn delete_secret_key<'a>(env: Env<'a>, contextArg: Term, keyArcArg: Term) -> NifResult<Term<'a>> {
+    unpack_mutable_context!(context, contextArg);
 
-    let key_arc = args[1].decode::<ResourceArc<keys::KeyResource>>()?;
-    let key_ref = key_arc.deref();
+    let keyArc = keyArcArg.decode::<ResourceArc<keys::KeyResource>>()?;
+    let key_ref = keyArc.deref();
     let key: &Key = &key_ref.key;
 
     try_gpgme!(context.delete_secret_key(key), env);
@@ -183,10 +173,10 @@ pub fn delete_secret_key<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<
 #[rustler::nif(
     schedule="DirtyIo"
 )]
-pub fn decrypt<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_mutable_context!(context, args[0]);
+pub fn decrypt<'a>(env: Env<'a>, contextArg: Term, cyphertext: String) -> NifResult<Term<'a>> {
+    unpack_mutable_context!(context, contextArg);
 
-    let cyphertext: String = args[1].decode::<String>()?;//.into_bytes();
+    // let cyphertext: String = args[1].decode::<String>()?;//.into_bytes();
 
     let mut cleartext: Vec<u8> = Vec::new();
 
@@ -196,12 +186,10 @@ pub fn decrypt<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
 }
 
 #[rustler::nif]
-pub fn sign_with_mode<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_mutable_context!(context, args[0]);
+pub fn sign_with_mode<'a>(env: Env<'a>, contextArg: Term, modeArg: Term, data: String) -> NifResult<Term<'a>> {
+    unpack_mutable_context!(context, contextArg);
 
-    let mode = sign_mode::arg_to_sign_mode(args[1])?;
-
-    let data: String = args[2].decode()?;
+    let mode = sign_mode::arg_to_sign_mode(modeArg)?;
 
     let mut signature: Vec<u8> = Vec::new();
 
@@ -211,12 +199,8 @@ pub fn sign_with_mode<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>
 }
 
 #[rustler::nif]
-pub fn verify_opaque<'a>(env: Env<'a>, args: &[Term<'a>]) -> NifResult<Term<'a>> {
-    unpack_mutable_context!(context, args[0]);
-
-    let signature: String = args[1].decode()?;
-
-    let data: String = args[2].decode()?;
+pub fn verify_opaque<'a>(env: Env<'a>, contextArg: Term, signature: String, data: String) -> NifResult<Term<'a>> {
+    unpack_mutable_context!(context, contextArg);
 
     let result = try_gpgme!(context.verify_opaque(signature, data), env);
 
