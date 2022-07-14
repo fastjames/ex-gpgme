@@ -4,11 +4,11 @@ defmodule ExGpgme.Results.Import do
   """
 
   @type t :: %__MODULE__{
-    fingerprint: String.t,
-  }
+          fingerprint: String.t()
+        }
 
   @enforce_keys [
-    :fingerprint,
+    :fingerprint
   ]
   defstruct @enforce_keys
 end

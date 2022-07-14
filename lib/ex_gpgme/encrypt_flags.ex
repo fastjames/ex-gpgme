@@ -6,14 +6,15 @@ defmodule ExGpgme.EncryptFlags do
   @typedoc """
   Flags for encrpytion functions
   """
-  @type flag :: :always_trust |
-    :expect_sign |
-    :no_compress |
-    :no_encrypt_to |
-    :prepare |
-    :symmetric |
-    :throw_keyids |
-    :wrap
+  @type flag ::
+          :always_trust
+          | :expect_sign
+          | :no_compress
+          | :no_encrypt_to
+          | :prepare
+          | :symmetric
+          | :throw_keyids
+          | :wrap
 
   @typedoc """
   List of flags

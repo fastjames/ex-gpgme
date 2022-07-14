@@ -6,8 +6,9 @@ defmodule ExGpgme.Results do
   @typedoc """
   PKA Trust
   """
-  @type pka_trust :: :unknown |
-    :bad |
-    :okay |
-    {:other, integer}
+  @type pka_trust ::
+          :unknown
+          | :bad
+          | :okay
+          | {:other, integer}
 end

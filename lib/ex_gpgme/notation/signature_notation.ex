@@ -4,18 +4,18 @@ defmodule ExGpgme.Notation.SignatureNotation do
   """
 
   @type t :: %__MODULE__{
-    is_human_readable: boolean,
-    is_critical: boolean,
-    # flags: any
-    name: String.t,
-    value: String.t,
-  }
+          is_human_readable: boolean,
+          is_critical: boolean,
+          # flags: any
+          name: String.t(),
+          value: String.t()
+        }
 
   @enforce_keys [
     :is_human_readable,
     :is_critical,
     :name,
-    :value,
+    :value
   ]
   defstruct @enforce_keys
 end
