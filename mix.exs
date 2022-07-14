@@ -5,9 +5,10 @@ defmodule ExGpgme.Mixfile do
 
   def project do
     [
+      aliases: aliases(),
       app: :ex_gpgme,
       version: "0.1.3",
-      elixir: "~> 1.5",
+      elixir: "~> 1.11",
       start_permanent: Mix.env == :prod,
       deps: deps(),
       description: description(),
@@ -15,6 +16,7 @@ defmodule ExGpgme.Mixfile do
       compilers: [:rustler] ++ Mix.compilers,
       rustler_crates: rustler_crates(),
       dialyzer: [ignore_warnings: "dialyzer.ignore-warnings"],
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -31,6 +33,20 @@ defmodule ExGpgme.Mixfile do
       maintainers: ["airatel Inc.", "Jonatan Männchen"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/jshmrtn/ex-gpgme"}
+    ]
+  end
+
+  defp aliases do
+    [
+      check: [
+        "clean",
+        "deps.unlock --check-unused",
+        "compile --warnings-as-errors",
+        "format --check-formatted",
+        "deps.unlock --check-unused",
+        "test",
+        "credo"
+      ]
     ]
   end
 
