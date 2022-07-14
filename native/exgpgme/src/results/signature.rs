@@ -1,4 +1,4 @@
-use rustler::{NifEnv, NifTerm, NifEncoder};
+use rustler::{Env, Term, Encoder};
 use gpgme::results::Signature;
 use std::time::UNIX_EPOCH;
 use rustler::types::elixir_struct;
@@ -41,7 +41,7 @@ macro_rules! nif_or_nil {
     });
 }
 
-pub fn transform_signature<'a>(env: NifEnv<'a>, signature: Signature) -> Result<NifTerm<'a>, Utf8Error> {
+pub fn transform_signature<'a>(env: Env<'a>, signature: Signature) -> Result<Term<'a>, Utf8Error> {
     let fingerprint_atom = atoms::fingerprint().encode(env);
     let status_atom = atoms::status().encode(env);
     let creation_time_atom = atoms::creation_time().encode(env);

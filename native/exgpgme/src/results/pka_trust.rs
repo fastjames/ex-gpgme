@@ -1,4 +1,4 @@
-use rustler::{NifEnv, NifTerm, NifEncoder};
+use rustler::{Env, Term, Encoder};
 use gpgme::results::PkaTrust;
 
 mod atoms {
@@ -10,7 +10,7 @@ mod atoms {
     }
 }
 
-pub fn transform_pka_trust<'a>(env: NifEnv<'a>, trust: PkaTrust) -> NifTerm<'a> {
+pub fn transform_pka_trust<'a>(env: Env<'a>, trust: PkaTrust) -> Term<'a> {
     match trust {
         PkaTrust::Unknown => atoms::unknown().encode(env),
         PkaTrust::Bad => atoms::bad().encode(env),
