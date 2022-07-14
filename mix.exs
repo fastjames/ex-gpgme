@@ -62,7 +62,9 @@ defmodule ExGpgme.Mixfile do
       {:ex_doc, ">= 0.0.0", only: [:dev, :test], runtime: false},
       {:inch_ex, ">= 0.0.0", only: :docs, runtime: false},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.14.4", only: [:dev, :test], runtime: false}
     ]
   end
 

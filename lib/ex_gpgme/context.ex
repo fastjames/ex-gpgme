@@ -33,14 +33,12 @@ defmodule ExGpgme.Context do
 
       iex> ExGpgme.Context.from_protocol(:open_pgp)
       {:ok, #Reference<0.1689386418.123076612.191614>}
-
   """
   @spec from_protocol(protocol :: ExGpgme.protocol()) :: {:ok, context} | {:error, String.t()}
   def from_protocol(_protocol), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   See `from_protocol/1`.
-
   """
   @spec from_protocol!(protocol :: ExGpgme.protocol()) :: context | no_return
   def from_protocol!(protocol) do
@@ -59,7 +57,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.protocol
       :open_pgp
-
   """
   @spec protocol(context :: context) :: ExGpgme.protocol()
   def protocol(_context), do: :erlang.nif_error(:nif_not_loaded)
@@ -73,7 +70,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.armor?
       false
-
   """
   @spec armor?(context :: context) :: boolean
   def armor?(_context), do: :erlang.nif_error(:nif_not_loaded)
@@ -89,7 +85,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.set_armor(true)
       :ok
-
   """
   @spec set_armor(context :: context, yes :: boolean) :: :ok
   def set_armor(_context, _yes), do: :erlang.nif_error(:nif_not_loaded)
@@ -103,7 +98,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.text_mode?
       false
-
   """
   @spec text_mode?(context :: context) :: boolean
   def text_mode?(_context), do: :erlang.nif_error(:nif_not_loaded)
@@ -124,7 +118,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.set_text_mode(true)
       :ok
-
   """
   @spec set_text_mode(context :: context, yes :: boolean) :: :ok
   def set_text_mode(_context, _yes), do: :erlang.nif_error(:nif_not_loaded)
@@ -138,7 +131,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.offline?
       false
-
   """
   @spec offline?(context :: context) :: boolean
   def offline?(_context), do: :erlang.nif_error(:nif_not_loaded)
@@ -162,7 +154,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.set_offline(true)
       :ok
-
   """
   @spec set_offline(context :: context, yes :: boolean) :: :ok
   def set_offline(_context, _yes), do: :erlang.nif_error(:nif_not_loaded)
@@ -183,7 +174,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.get_flag("export-session-key")
       {:ok, ""}
-
   """
   @spec get_flag(context :: context, name :: String.t()) ::
           {:ok, String.t()} | {:error, :not_set | String.t()}
@@ -191,7 +181,6 @@ defmodule ExGpgme.Context do
 
   @doc """
   See `get_flag/2`.
-
   """
   @spec get_flag!(context :: context, name :: String.t()) :: String.t() | no_return
   def get_flag!(context, name) do
@@ -232,7 +221,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       iex> ExGpgme.Context.set_flag(context, "raw-description", "1")
       :ok
-
   """
   @spec set_flag(context :: context, flag :: String.t(), value :: String.t()) ::
           :ok | {:error, String.t()}
@@ -249,14 +237,12 @@ defmodule ExGpgme.Context do
       %ExGpgme.Engine.EngineInfo{home_dir: "",
         path: "/usr/local/MacGPG2/bin/gpg", protocol: :open_pgp,
         required_version: "1.4.0", version: "2.2.0"}
-
   """
   @spec engine_info(context :: context) :: {:ok, EngineInfo.t()} | {:error, String.t()}
   def engine_info(_context), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   See `engine_info/1`
-
   """
   @spec engine_info!(context :: context) :: EngineInfo.t() | no_return
   def engine_info!(context) do
@@ -275,14 +261,12 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.set_engine_path("/some/path")
       :ok
-
   """
   @spec set_engine_path(context :: context, path :: String.t()) :: :ok | {:error, String.t()}
   def set_engine_path(_context, _path), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   See `set_engine_path/2`
-
   """
   @spec set_engine_path!(context :: context, path :: String.t()) :: nil | no_return
   def set_engine_path!(context, path) do
@@ -301,7 +285,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.set_engine_home_dir("/some/path")
       :ok
-
   """
   @spec set_engine_home_dir(context :: context, home_dir :: String.t()) ::
           :ok | {:error, String.t()}
@@ -309,7 +292,6 @@ defmodule ExGpgme.Context do
 
   @doc """
   See `set_engine_home_dir/2`
-
   """
   @spec set_engine_home_dir!(context :: context, home_dir :: String.t()) :: nil | no_return
   def set_engine_home_dir!(context, home_dir) do
@@ -328,7 +310,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.pinentry_mode
       :default
-
   """
   @spec pinentry_mode(context :: context) :: ExGpgme.pinentry_mode()
   def pinentry_mode(_context), do: :erlang.nif_error(:nif_not_loaded)
@@ -342,7 +323,6 @@ defmodule ExGpgme.Context do
       ...> |> ExGpgme.Context.from_protocol!
       ...> |> ExGpgme.Context.set_pinentry_mode(:ask)
       :ok
-
   """
   @spec set_pinentry_mode(context :: context, mode :: ExGpgme.pinentry_mode()) ::
           :ok | {:error, String.t()}
@@ -350,7 +330,6 @@ defmodule ExGpgme.Context do
 
   @doc """
   See `set_pinentry_mode/2`
-
   """
   @spec set_pinentry_mode!(context :: context, mode :: ExGpgme.pinentry_mode()) :: nil | no_return
   def set_pinentry_mode!(context, mode) do
@@ -376,7 +355,6 @@ defmodule ExGpgme.Context do
         new_user_ids: 0, not_imported: 0, secret_considered: 0,
         secret_imported: 0, secret_unchanged: 0, unchanged: 1,
         without_user_id: 0}}
-
   """
   @spec import(context :: context, data :: String.t()) ::
           {:ok, ImportResult.t()} | {:error, String.t()}
@@ -384,7 +362,6 @@ defmodule ExGpgme.Context do
 
   @doc """
   See `import/2`.
-
   """
   @spec import!(context :: context, data :: String.t()) :: ImportResult.t() | no_return
   def import!(context, data) do
@@ -408,7 +385,6 @@ defmodule ExGpgme.Context do
       iex> ExGpgme.Context.import!(context, File.read!("priv/test/keys/sender_public.asc"))
       iex> ExGpgme.Context.find_key(context, "not-existing-fingerprint")
       {:error, "End of file"}
-
   """
   @spec find_key(context :: context, fingerprint :: String.t()) ::
           {:ok, Key.t()} | {:error, String.t()}
@@ -416,7 +392,6 @@ defmodule ExGpgme.Context do
 
   @doc """
   See `find_key/2`.
-
   """
   @spec find_key!(context :: context, fingerprint :: String.t()) :: Key.t() | no_return
   def find_key!(context, fingerprint) do
@@ -438,7 +413,6 @@ defmodule ExGpgme.Context do
       iex> ExGpgme.Context.encrypt(context, [recipient], "Hello World", [:always_trust])
       {:ok,
        "-----BEGIN PGP MESSAGE-----\\n[data]\\n-----END PGP MESSAGE-----\\n"}
-
   """
   @spec encrypt(
           context :: context,
@@ -488,7 +462,6 @@ defmodule ExGpgme.Context do
       iex> recipient = ExGpgme.Context.find_key!(context, "95E93F470BCB2E96C648572DFBFA85913EE05E95")
       iex> ExGpgme.Context.sign_and_encrypt(context, [recipient], "Hello World", [:always_trust])
       {:ok, "-----BEGIN PGP MESSAGE-----\\n[data]\\n-----END PGP MESSAGE-----\\n"}
-
   """
   @spec sign_and_encrypt(
           context :: context,
@@ -537,14 +510,12 @@ defmodule ExGpgme.Context do
       iex> key = ExGpgme.Context.find_key!(context, "95E93F470BCB2E96C648572DFBFA85913EE05E95")
       iex> ExGpgme.Context.delete_key(context, key)
       :ok
-
   """
   @spec delete_key(context :: context, key :: Key.t()) :: :ok | {:error, String.t()}
   def delete_key(_context, _key), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   See `delete_key/2`
-
   """
   @spec delete_key!(context :: context, key :: Key.t()) :: nil | no_return
   def delete_key!(context, key) do
@@ -564,14 +535,12 @@ defmodule ExGpgme.Context do
       iex> key = ExGpgme.Context.find_key!(context, "95E93F470BCB2E96C648572DFBFA85913EE05E95")
       iex> ExGpgme.Context.delete_secret_key(context, key)
       :ok
-
   """
   @spec delete_secret_key(context :: context, key :: Key.t()) :: :ok | {:error, String.t()}
   def delete_secret_key(_context, _key), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   See `delete_secret_key/2`
-
   """
   @spec delete_secret_key!(context :: context, key :: Key.t()) :: nil | no_return
   def delete_secret_key!(context, key) do
@@ -593,7 +562,6 @@ defmodule ExGpgme.Context do
       iex> cyphertext = ExGpgme.Context.encrypt!(context, [recipient], "Hello World", [:always_trust])
       iex> ExGpgme.Context.decrypt(context, cyphertext)
       {:ok, "Hello World"}
-
   """
   @spec decrypt(context :: context, cypertext :: String.t()) ::
           {:ok, String.t()} | {:error, String.t()}
@@ -601,7 +569,6 @@ defmodule ExGpgme.Context do
 
   @doc """
   See `decrypt/2`
-
   """
   @spec decrypt!(context :: context, cypertext :: String.t()) :: String.t() | no_return
   def decrypt!(context, cyphertext) do
@@ -623,7 +590,6 @@ defmodule ExGpgme.Context do
       iex> ExGpgme.Context.import!(context, File.read!("priv/test/keys/sender_secret.asc"))
       iex> ExGpgme.Context.sign(context, "Hello World")
       {:ok, "-----BEGIN PGP MESSAGE-----\\n[data]\\n-----END PGP MESSAGE-----\\n"}
-
   """
   @spec sign(context :: context, mode :: ExGpgme.sign_mode(), data :: String.t()) ::
           {:ok, String.t()} | {:error, String.t()}
@@ -635,7 +601,6 @@ defmodule ExGpgme.Context do
 
   @doc """
   See `sign/3`
-
   """
   @spec sign!(context :: context, mode :: ExGpgme.sign_mode(), data :: String.t()) ::
           String.t() | no_return
@@ -666,7 +631,6 @@ defmodule ExGpgme.Context do
            nonvalidity_reason: nil, notations: [], pka_address: nil,
            pka_trust: :unknown, policy_url: nil, status: :valid,
            validity: :full, verified_by_chain: false}]}}
-
   """
   @spec verify_opaque(context :: context, signature :: String.t(), data :: String.t()) ::
           {:ok, VerificationResult.t()} | {:error, String.t()}

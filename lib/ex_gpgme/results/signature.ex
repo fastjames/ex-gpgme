@@ -7,6 +7,26 @@ defmodule ExGpgme.Results.Signature do
   alias ExGpgme.Results
   alias ExGpgme.Notation.SignatureNotation
 
+  @enforce_keys [
+    :fingerprint,
+    :status,
+    :creation_time,
+    :expiration_time,
+    :never_expires,
+    :is_wrong_key_usage,
+    :verified_by_chain,
+    :pka_trust,
+    :pka_address,
+    :validity,
+    :nonvalidity_reason,
+    :key_algorithm,
+    :hash_algorithm,
+    :policy_url,
+    :notations,
+    :key
+  ]
+  defstruct @enforce_keys
+
   @type status :: :valid | :invalid
 
   @type t :: %__MODULE__{
@@ -27,24 +47,4 @@ defmodule ExGpgme.Results.Signature do
           notations: [SignatureNotation.t()],
           key: Key.t() | nil
         }
-
-  @enforce_keys [
-    :fingerprint,
-    :status,
-    :creation_time,
-    :expiration_time,
-    :never_expires,
-    :is_wrong_key_usage,
-    :verified_by_chain,
-    :pka_trust,
-    :pka_address,
-    :validity,
-    :nonvalidity_reason,
-    :key_algorithm,
-    :hash_algorithm,
-    :policy_url,
-    :notations,
-    :key
-  ]
-  defstruct @enforce_keys
 end
