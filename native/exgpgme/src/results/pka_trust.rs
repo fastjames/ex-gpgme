@@ -2,11 +2,11 @@ use rustler::{Env, Term, Encoder};
 use gpgme::results::PkaTrust;
 
 mod atoms {
-    rustler_atoms! {
-        atom unknown;
-        atom bad;
-        atom okay;
-        atom other;
+    atoms! {
+        unknown,
+        bad,
+        okay,
+        other
     }
 }
 

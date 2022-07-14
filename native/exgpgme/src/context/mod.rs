@@ -17,10 +17,10 @@ use results::import_result::transform_import_result;
 #[macro_use] pub mod resource;
 
 mod atoms {
-    rustler_atoms! {
-        atom ok;
-        atom error;
-        atom not_set;
+    atoms! {
+        ok,
+        error,
+        not_set
     }
 }
 

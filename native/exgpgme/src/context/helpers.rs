@@ -1,7 +1,7 @@
 pub mod atoms {
-    rustler_atoms! {
-        atom ok;
-        atom error;
+    atoms! {
+        ok,
+        error
     }
 }
 

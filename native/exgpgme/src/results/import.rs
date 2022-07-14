@@ -3,8 +3,8 @@ use gpgme::results::Import;
 use rustler::types::elixir_struct;
 
 mod atoms {
-    rustler_atoms! {
-        atom fingerprint;
+    atoms! {
+        fingerprint
     }
 }
 
