@@ -50,7 +50,7 @@ rustler_export_nifs! {
 }
 
 fn on_load<'a>(env: Env<'a>, _load_info: Term<'a>) -> bool {
-    resource_struct_init!(context::resource::ContextNifResource, env);
-    resource_struct_init!(keys::KeyResource, env);
+    rustler::resource!(context::resource::ContextNifResource, env);
+    rustler::resource!(keys::KeyResource, env);
     true
 }
