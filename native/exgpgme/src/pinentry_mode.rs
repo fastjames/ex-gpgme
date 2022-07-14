@@ -4,13 +4,13 @@ use rustler::TermType;
 use rustler::types::tuple;
 
 mod atoms {
-    rustler_atoms! {
-        atom default;
-        atom ask;
-        atom cancel;
-        atom error;
-        atom loopback;
-        atom other;
+    atoms! {
+        default,
+        ask,
+        cancel,
+        error,
+        loopback,
+        other
     }
 }
 

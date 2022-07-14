@@ -4,17 +4,17 @@ use rustler::types::tuple;
 use gpgme::{Protocol};
 
 mod atoms {
-    rustler_atoms! {
-        atom open_pgp;
-        atom cms;
-        atom gpg_conf;
-        atom assuan;
-        atom g13;
-        atom ui_server;
-        atom spawn;
-        atom default;
-        atom unknown;
-        atom other;
+    atoms! {
+        open_pgp,
+        cms,
+        gpg_conf,
+        assuan,
+        g13,
+        ui_server,
+        spawn,
+        default,
+        unknown,
+        other
     }
 }
 

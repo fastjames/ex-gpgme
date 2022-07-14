@@ -6,9 +6,9 @@ use std::str::Utf8Error;
 use ::results::signature::transform_signature;
 
 mod atoms {
-    rustler_atoms! {
-        atom filename;
-        atom signatures;
+    atoms! {
+        filename,
+        signatures
     }
 }
 

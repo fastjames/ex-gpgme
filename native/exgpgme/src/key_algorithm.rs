@@ -2,18 +2,18 @@ use rustler::{Env, Term, Encoder};
 use gpgme::KeyAlgorithm;
 
 mod atoms {
-    rustler_atoms! {
-        atom rsa;
-        atom rsa_encrypt;
-        atom rsa_sign;
-        atom elgamal_encrypt;
-        atom dsa;
-        atom ecc;
-        atom elgamal;
-        atom ecdsa;
-        atom ecdh;
-        atom eddsa;
-        atom other;
+    atoms! {
+        rsa,
+        rsa_encrypt,
+        rsa_sign,
+        elgamal_encrypt,
+        dsa,
+        ecc,
+        elgamal,
+        ecdsa,
+        ecdh,
+        eddsa,
+        other
     }
 }
 

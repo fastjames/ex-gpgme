@@ -5,21 +5,21 @@ use rustler::types::elixir_struct;
 use ::results::import::transform_import;
 
 mod atoms {
-    rustler_atoms! {
-        atom considered;
-        atom without_user_id;
-        atom imported;
-        atom imported_rsa;
-        atom unchanged;
-        atom new_user_ids;
-        atom new_subkeys;
-        atom new_signatures;
-        atom new_revocations;
-        atom secret_considered;
-        atom secret_imported;
-        atom secret_unchanged;
-        atom not_imported;
-        atom imports;
+    atoms! {
+        considered,
+        without_user_id,
+        imported,
+        imported_rsa,
+        unchanged,
+        new_user_ids,
+        new_subkeys,
+        new_signatures,
+        new_revocations,
+        secret_considered,
+        secret_imported,
+        secret_unchanged,
+        not_imported,
+        imports
     }
 }
 

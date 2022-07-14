@@ -5,12 +5,12 @@ use std::str::Utf8Error;
 use protocol;
 
 mod atoms {
-    rustler_atoms! {
-        atom protocol;
-        atom path;
-        atom home_dir;
-        atom version;
-        atom required_version;
+    atoms! {
+        protocol,
+        path,
+        home_dir,
+        version,
+        required_version
     }
 }
 

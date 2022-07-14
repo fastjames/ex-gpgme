@@ -13,7 +13,7 @@ defmodule ExGpgme.Mixfile do
       deps: deps(),
       description: description(),
       package: package(),
-      compilers: [:rustler] ++ Mix.compilers,
+      compilers: Mix.compilers,
       rustler_crates: rustler_crates(),
       dialyzer: [ignore_warnings: "dialyzer.ignore-warnings"],
       test_coverage: [tool: ExCoveralls]
@@ -58,7 +58,7 @@ defmodule ExGpgme.Mixfile do
 
   defp deps do
     [
-      {:rustler, "0.21.0"},
+      {:rustler, "~> 0.22.0"},
       {:ex_doc, ">= 0.0.0", only: [:dev, :test], runtime: false},
       {:inch_ex, ">= 0.0.0", only: :docs, runtime: false},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},

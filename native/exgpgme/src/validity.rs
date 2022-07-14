@@ -2,13 +2,13 @@ use rustler::{Env, Term, Encoder};
 use gpgme::Validity;
 
 mod atoms {
-    rustler_atoms! {
-        atom unknown;
-        atom undefined;
-        atom never;
-        atom marginal;
-        atom full;
-        atom ultimate;
+    atoms! {
+        unknown,
+        undefined,
+        never,
+        marginal,
+        full,
+        ultimate
     }
 }
 

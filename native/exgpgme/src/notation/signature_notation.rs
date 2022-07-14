@@ -4,12 +4,12 @@ use rustler::types::elixir_struct;
 use std::str::Utf8Error;
 
 mod atoms {
-    rustler_atoms! {
-        atom is_human_readable;
-        atom is_critical;
-        // atom flags;
-        atom name;
-        atom value;
+    atoms! {
+        is_human_readable,
+        is_critical,
+        // flags,
+        name,
+        value
     }
 }
 

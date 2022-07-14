@@ -12,25 +12,25 @@ use hash_algorithm::transform_hash_algorithm;
 use keys::wrap_key;
 
 mod atoms {
-    rustler_atoms! {
-        atom fingerprint;
-        atom status;
-        atom valid;
-        atom invalid;
-        atom creation_time;
-        atom expiration_time;
-        atom never_expires;
-        atom is_wrong_key_usage;
-        atom verified_by_chain;
-        atom pka_trust;
-        atom pka_address;
-        atom validity;
-        atom nonvalidity_reason;
-        atom key_algorithm;
-        atom hash_algorithm;
-        atom policy_url;
-        atom notations;
-        atom key;
+    atoms! {
+        fingerprint,
+        status,
+        valid,
+        invalid,
+        creation_time,
+        expiration_time,
+        never_expires,
+        is_wrong_key_usage,
+        verified_by_chain,
+        pka_trust,
+        pka_address,
+        validity,
+        nonvalidity_reason,
+        key_algorithm,
+        hash_algorithm,
+        policy_url,
+        notations,
+        key
     }
 }
 
