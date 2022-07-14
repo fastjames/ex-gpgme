@@ -5,20 +5,21 @@ defmodule ExGpgme.ContextTest do
   alias ExGpgme.Context
   alias ExGpgme.Results.{VerificationResult, Signature, ImportResult}
 
-  doctest Context, except: [
-    from_protocol: 1,
-    from_protocol!: 1,
-    import: 2,
-    find_key: 2,
-    encrypt: 4,
-    sign_and_encrypt: 4,
-    engine_info: 1,
-    delete_key: 2,
-    delete_secret_key: 2,
-    decrypt: 2,
-    sign: 3,
-    verify_opaque: 3,
-  ]
+  doctest Context,
+    except: [
+      from_protocol: 1,
+      from_protocol!: 1,
+      import: 2,
+      find_key: 2,
+      encrypt: 4,
+      sign_and_encrypt: 4,
+      engine_info: 1,
+      delete_key: 2,
+      delete_secret_key: 2,
+      decrypt: 2,
+      sign: 3,
+      verify_opaque: 3
+    ]
 
   @sender_fingerprint "95E93F470BCB2E96C648572DFBFA85913EE05E95"
   @sender_secret_key File.read!("priv/test/keys/sender_secret.asc")
@@ -34,7 +35,7 @@ defmodule ExGpgme.ContextTest do
 
   setup_all do
     @keychain_base_dir
-    |> File.ls!
+    |> File.ls!()
     |> Enum.reject(fn file ->
       file == ".gitkeep"
     end)
@@ -51,40 +52,44 @@ defmodule ExGpgme.ContextTest do
   end
 
   setup(tags) do
-    context = if tags[:context] do
-      dirname = :erlang.crc32("#{inspect make_ref()}")
-      path = "priv/test/keychains/#{dirname}"
+    context =
+      if tags[:context] do
+        dirname = :erlang.crc32("#{inspect(make_ref())}")
+        path = "priv/test/keychains/#{dirname}"
 
-      File.mkdir!(path)
-      File.chmod!(path, 0o700)
+        File.mkdir!(path)
+        File.chmod!(path, 0o700)
 
-      on_exit fn ->
-        File.rm_rf!(path)
-      end
+        on_exit(fn ->
+          File.rm_rf!(path)
+        end)
 
-      context = Context.from_protocol!(:open_pgp)
-      Context.set_pinentry_mode!(context, :loopback)
-      Context.set_engine_home_dir!(context, path)
+        context = Context.from_protocol!(:open_pgp)
+        Context.set_pinentry_mode!(context, :loopback)
+        Context.set_engine_home_dir!(context, path)
 
-      if tags[:import_all] || tags[:import_sender_secret] do
-        import_test_key!(context, @sender_secret_key)
-      end
-      if tags[:import_sender_public] do
-        import_test_key!(context, @sender_public_key)
-      end
-      if tags[:import_all] || tags[:import_receiver_secret] do
-        import_test_key!(context, @receiver_secret_key)
-      end
-      if tags[:import_receiver_public] do
-        import_test_key!(context, @receiver_public_key)
-      end
+        if tags[:import_all] || tags[:import_sender_secret] do
+          import_test_key!(context, @sender_secret_key)
+        end
 
-      if tags[:armor] do
-        Context.set_armor(context, tags[:armor])
-      end
+        if tags[:import_sender_public] do
+          import_test_key!(context, @sender_public_key)
+        end
 
-      context
-    end
+        if tags[:import_all] || tags[:import_receiver_secret] do
+          import_test_key!(context, @receiver_secret_key)
+        end
+
+        if tags[:import_receiver_public] do
+          import_test_key!(context, @receiver_public_key)
+        end
+
+        if tags[:armor] do
+          Context.set_armor(context, tags[:armor])
+        end
+
+        context
+      end
 
     {:ok, %{context: context}}
   end
@@ -100,11 +105,11 @@ defmodule ExGpgme.ContextTest do
       {:spawn, :ref},
       {:default, :error},
       {:unknown, :error},
-      {{:other, 17}, :error},
+      {{:other, 17}, :error}
     ]
 
     for {protocol, expected_result} <- protocols do
-      test "uses correct constant for #{inspect protocol}" do
+      test "uses correct constant for #{inspect(protocol)}" do
         protocol = unquote(protocol)
 
         result = Context.from_protocol(protocol)
@@ -113,6 +118,7 @@ defmodule ExGpgme.ContextTest do
           :ref ->
             assert {:ok, ref} = result
             assert is_reference(ref)
+
           :error ->
             assert {:error, "Invalid value"} = result
         end
@@ -123,9 +129,11 @@ defmodule ExGpgme.ContextTest do
       assert_raise ArgumentError, fn ->
         Context.from_protocol(:foo)
       end
+
       assert_raise ArgumentError, fn ->
         Context.from_protocol("foo")
       end
+
       assert_raise ArgumentError, fn ->
         Context.from_protocol({:foo, 17})
       end
@@ -143,7 +151,7 @@ defmodule ExGpgme.ContextTest do
     @tag context: true
     test "imports keys", %{context: context} do
       assert {:ok, %ExGpgme.Results.ImportResult{imports: imports}} =
-        Context.import(context, @sender_public_key)
+               Context.import(context, @sender_public_key)
 
       assert 1 = Enum.count(imports)
     end
@@ -153,7 +161,7 @@ defmodule ExGpgme.ContextTest do
     @tag context: true
     test "imports keys", %{context: context} do
       assert %ExGpgme.Results.ImportResult{imports: imports} =
-        Context.import!(context, @sender_public_key <> "\n" <> @receiver_public_key)
+               Context.import!(context, @sender_public_key <> "\n" <> @receiver_public_key)
 
       assert 2 = Enum.count(imports)
     end
@@ -190,7 +198,8 @@ defmodule ExGpgme.ContextTest do
     test "encrypts correctly", %{context: context} do
       assert recipient = Context.find_key!(context, @receiver_fingerprint)
 
-      assert {:ok, cyphertext} = Context.encrypt(context, [recipient], "Hello World!", [:always_trust])
+      assert {:ok, cyphertext} =
+               Context.encrypt(context, [recipient], "Hello World!", [:always_trust])
 
       assert is_binary(cyphertext)
       assert cyphertext =~ "-BEGIN PGP MESSAGE-"

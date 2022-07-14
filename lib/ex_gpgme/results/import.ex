@@ -3,12 +3,12 @@ defmodule ExGpgme.Results.Import do
   Import struct for any key in an import.
   """
 
-  @type t :: %__MODULE__{
-    fingerprint: String.t,
-  }
-
   @enforce_keys [
-    :fingerprint,
+    :fingerprint
   ]
   defstruct @enforce_keys
+
+  @type t :: %__MODULE__{
+          fingerprint: String.t()
+        }
 end

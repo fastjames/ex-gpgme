@@ -1,2 +1,2 @@
-ExUnit.configure exclude: [:manual_pinentry]
+ExUnit.configure(exclude: [:manual_pinentry])
 ExUnit.start()

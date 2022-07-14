@@ -5,9 +5,10 @@ defmodule ExGpgme.Mixfile do
 
   def project do
     [
+      aliases: aliases(),
       app: :ex_gpgme,
       version: "0.1.3",
-      elixir: "~> 1.5",
+      elixir: "~> 1.11",
       start_permanent: Mix.env == :prod,
       deps: deps(),
       description: description(),
@@ -15,6 +16,7 @@ defmodule ExGpgme.Mixfile do
       compilers: [:rustler] ++ Mix.compilers,
       rustler_crates: rustler_crates(),
       dialyzer: [ignore_warnings: "dialyzer.ignore-warnings"],
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -34,6 +36,20 @@ defmodule ExGpgme.Mixfile do
     ]
   end
 
+  defp aliases do
+    [
+      check: [
+        "clean",
+        "deps.unlock --check-unused",
+        "compile --warnings-as-errors",
+        "format --check-formatted",
+        "deps.unlock --check-unused",
+        "test",
+        "credo"
+      ]
+    ]
+  end
+
   def application do
     [
       extra_applications: [:logger]
@@ -44,9 +60,11 @@ defmodule ExGpgme.Mixfile do
     [
       {:rustler, "0.21.0"},
       {:ex_doc, ">= 0.0.0", only: [:dev, :test], runtime: false},
-      {:inch_ex, only: :docs, runtime: false},
+      {:inch_ex, ">= 0.0.0", only: :docs, runtime: false},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.14.4", only: [:dev, :test], runtime: false}
     ]
   end
 

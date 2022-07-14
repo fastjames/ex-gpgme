@@ -5,14 +5,14 @@ defmodule ExGpgme.Results.VerificationResult do
 
   alias ExGpgme.Results.Signature
 
-  @type t :: %__MODULE__{
-    filename: String.t | nil,
-    signatures: [Signature.t],
-  }
-
   @enforce_keys [
     :filename,
-    :signatures,
+    :signatures
   ]
   defstruct @enforce_keys
+
+  @type t :: %__MODULE__{
+          filename: String.t() | nil,
+          signatures: [Signature.t()]
+        }
 end
