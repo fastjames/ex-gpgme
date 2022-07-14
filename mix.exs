@@ -42,7 +42,7 @@ defmodule ExGpgme.Mixfile do
 
   defp deps do
     [
-      {:rustler, "~> 0.10.1"},
+      {:rustler, "0.21.0"},
       {:ex_doc, ">= 0.0.0", only: [:dev, :test], runtime: false},
       {:inch_ex, only: :docs, runtime: false},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
