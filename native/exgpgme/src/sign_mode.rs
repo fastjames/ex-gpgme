@@ -1,9 +1,9 @@
 use gpgme::SignMode;
-use rustler::{NifTerm, NifError};
+use rustler::{Term, Error};
 use rustler::TermType;
 use rustler::types::tuple;
 
-pub fn arg_to_sign_mode(arg: NifTerm) -> Result<SignMode, NifError> {
+pub fn arg_to_sign_mode(arg: Term) -> Result<SignMode, Error> {
     match arg.get_type() {
         TermType::Atom => {
             let input_protocol = arg.atom_to_string()?;
@@ -11,7 +11,7 @@ pub fn arg_to_sign_mode(arg: NifTerm) -> Result<SignMode, NifError> {
                 "normal" => Ok(SignMode::Normal),
                 "detached" => Ok(SignMode::Detached),
                 "clear" => Ok(SignMode::Clear),
-                _ => Err(NifError::BadArg)
+                _ => Err(Error::BadArg)
             }
         },
         TermType::Tuple => {
@@ -21,9 +21,9 @@ pub fn arg_to_sign_mode(arg: NifTerm) -> Result<SignMode, NifError> {
             if name == "other" {
                 Ok(SignMode::Other(other))
             } else {
-                Err(NifError::BadArg)
+                Err(Error::BadArg)
             }
         },
-        _ => Err(NifError::BadArg)
+        _ => Err(Error::BadArg)
     }
 }

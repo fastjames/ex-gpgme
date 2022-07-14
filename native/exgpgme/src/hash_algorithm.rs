@@ -1,4 +1,4 @@
-use rustler::{NifEnv, NifTerm, NifEncoder};
+use rustler::{Env, Term, Encoder};
 use gpgme::HashAlgorithm;
 
 mod atoms {
@@ -22,7 +22,7 @@ mod atoms {
     }
 }
 
-pub fn transform_hash_algorithm<'a>(env: NifEnv<'a>, algorithm: HashAlgorithm) -> NifTerm<'a> {
+pub fn transform_hash_algorithm<'a>(env: Env<'a>, algorithm: HashAlgorithm) -> Term<'a> {
     match algorithm {
         HashAlgorithm::None => atoms::none().encode(env),
         HashAlgorithm::Md2 => atoms::md2().encode(env),

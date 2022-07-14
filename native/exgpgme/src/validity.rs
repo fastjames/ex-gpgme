@@ -1,4 +1,4 @@
-use rustler::{NifEnv, NifTerm, NifEncoder};
+use rustler::{Env, Term, Encoder};
 use gpgme::Validity;
 
 mod atoms {
@@ -12,7 +12,7 @@ mod atoms {
     }
 }
 
-pub fn transform_validity<'a>(env: NifEnv<'a>, validity: Validity) -> NifTerm<'a> {
+pub fn transform_validity<'a>(env: Env<'a>, validity: Validity) -> Term<'a> {
     match validity {
         Validity::Unknown => atoms::unknown().encode(env),
         Validity::Undefined => atoms::undefined().encode(env),
