@@ -1,4 +1,4 @@
-use rustler::{Env, Term, NifResult, Encoder};
+use rustler::{Atom, Env, Term, NifResult, Encoder};
 use rustler::resource::ResourceArc;
 use rustler::types::list::ListIterator;
 use gpgme::{Context, EncryptFlags};
@@ -40,45 +40,45 @@ pub fn get_protocol<'a>(env: Env<'a>, context_arc: ResourceArc<resource::Context
 }
 
 #[rustler::nif]
-pub fn offline<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term<'a>> {
+pub fn offline(context_arc: ResourceArc<resource::ContextNifResource>) -> bool {
     unpack_immutable_context!(context, context_arc);
-    Ok(context.offline().encode(env))
+    context.offline()
 }
 
 #[rustler::nif]
-pub fn set_offline<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, yes: bool) -> NifResult<Term<'a>> {
+pub fn set_offline(context_arc: ResourceArc<resource::ContextNifResource>, yes: bool) -> Atom {
     unpack_mutable_context!(context, context_arc);
     context.set_offline(yes);
 
-    Ok(atoms::ok().encode(env))
+    atoms::ok()
 }
 
 #[rustler::nif]
-pub fn text_mode<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term<'a>> {
+pub fn text_mode(context_arc: ResourceArc<resource::ContextNifResource>) -> bool {
     unpack_immutable_context!(context, context_arc);
-    Ok(context.text_mode().encode(env))
+    context.text_mode()
 }
 
 #[rustler::nif]
-pub fn set_text_mode<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, yes: bool) -> NifResult<Term<'a>> {
+pub fn set_text_mode(context_arc: ResourceArc<resource::ContextNifResource>, yes: bool) -> Atom {
     unpack_mutable_context!(context, context_arc);
     context.set_text_mode(yes);
 
-    Ok(atoms::ok().encode(env))
+    atoms::ok()
 }
 
 #[rustler::nif]
-pub fn armor<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term<'a>> {
+pub fn armor(context_arc: ResourceArc<resource::ContextNifResource>) -> bool {
     unpack_immutable_context!(context, context_arc);
-    Ok(context.armor().encode(env))
+    context.armor()
 }
 
 #[rustler::nif]
-pub fn set_armor<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, yes: bool) -> NifResult<Term<'a>> {
+pub fn set_armor(context_arc: ResourceArc<resource::ContextNifResource>, yes: bool) -> Atom {
     unpack_mutable_context!(context, context_arc);
     context.set_armor(yes);
 
-    Ok(atoms::ok().encode(env))
+    atoms::ok()
 }
 
 
