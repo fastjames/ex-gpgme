@@ -62,7 +62,7 @@ defmodule ExGpgme.Context do
   def protocol(context), do: get_protocol(context)
 
   @spec get_protocol(context :: context) :: ExGpgme.protocol()
-  def get_protocol(_context), do: :erlang.nif_error(:nif_not_loaded)
+  defp get_protocol(_context), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   The function returns `true` if the output is ASCII armored, and `false` if it is not.
@@ -78,7 +78,7 @@ defmodule ExGpgme.Context do
   def armor?(context), do: armor(context)
 
   @spec armor(context :: context) :: boolean
-  def armor(_context), do: :erlang.nif_error(:nif_not_loaded)
+  defp armor(_context), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   The function specifies if the output should be ASCII armored. By default, output is not ASCII armored.
@@ -109,7 +109,7 @@ defmodule ExGpgme.Context do
   def text_mode?(context), do: text_mode(context)
 
   @spec text_mode(context :: context) :: boolean
-  def text_mode(_context), do: :erlang.nif_error(:nif_not_loaded)
+  defp text_mode(_context), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   The function specifies if canonical text mode should be used. By default, text mode is not used.
@@ -145,7 +145,7 @@ defmodule ExGpgme.Context do
   def offline?(context), do: offline(context)
 
   @spec offline(context :: context) :: boolean
-  def offline(_context), do: :erlang.nif_error(:nif_not_loaded)
+  defp offline(_context), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   The function specifies if offline mode should be used. By default, offline mode is not used.
@@ -327,7 +327,7 @@ defmodule ExGpgme.Context do
   def pinentry_mode(context), do: get_pinentry_mode(context)
 
   @spec get_pinentry_mode(context :: context) :: ExGpgme.pinentry_mode()
-  def get_pinentry_mode(_context), do: :erlang.nif_error(:nif_not_loaded)
+  defp get_pinentry_mode(_context), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   The function sets the mode for the context.
