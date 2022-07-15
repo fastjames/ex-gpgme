@@ -2,7 +2,6 @@
 extern crate gpgme;
 
 use rustler::{Env, Term};
-use rustler::schedule::SchedulerFlags;
 
 #[macro_use] mod helpers;
 #[macro_use] mod keys;
@@ -18,36 +17,36 @@ mod key_algorithm;
 mod hash_algorithm;
 mod notation;
 
-rustler_export_nifs! {
+rustler::init!(
     "Elixir.ExGpgme.Context",
     [
-        ("from_protocol", 1, context::from_protocol),
-        ("protocol", 1, context::protocol),
-        ("armor?", 1, context::armor),
-        ("set_armor", 2, context::set_armor),
-        ("text_mode?", 1, context::text_mode),
-        ("set_text_mode", 2, context::set_text_mode),
-        ("offline?", 1, context::offline),
-        ("set_offline", 2, context::set_offline),
-        ("get_flag", 2, context::get_flag),
-        ("set_flag", 3, context::set_flag),
-        ("engine_info", 1, context::engine_info),
-        ("set_engine_path", 2, context::set_engine_path),
-        ("set_engine_home_dir", 2, context::set_engine_home_dir),
-        ("pinentry_mode", 1, context::pinentry_mode),
-        ("set_pinentry_mode", 2, context::set_pinentry_mode),
-        ("import", 2, context::import, SchedulerFlags::DirtyIo),
-        ("find_key", 2, context::find_key, SchedulerFlags::DirtyIo),
-        ("delete_key", 2, context::delete_key, SchedulerFlags::DirtyIo),
-        ("delete_secret_key", 2, context::delete_secret_key, SchedulerFlags::DirtyIo),
-        ("decrypt", 2, context::decrypt, SchedulerFlags::DirtyIo),
-        ("encrypt_with_flags", 4, context::encrypt_with_flags, SchedulerFlags::DirtyIo),
-        ("sign_and_encrypt_with_flags", 4, context::sign_and_encrypt_with_flags, SchedulerFlags::DirtyIo),
-        ("sign_with_mode", 3, context::sign_with_mode, SchedulerFlags::DirtyIo),
-        ("verify_opaque", 3, context::verify_opaque, SchedulerFlags::DirtyIo),
+       context::from_protocol,
+       context::get_protocol,
+       context::armor,
+       context::set_armor,
+       context::text_mode,
+       context::set_text_mode,
+       context::offline,
+       context::set_offline,
+       context::get_flag,
+       context::set_flag,
+       context::engine_info,
+       context::set_engine_path,
+       context::set_engine_home_dir,
+       context::get_pinentry_mode,
+       context::set_pinentry_mode,
+       context::import,
+       context::find_key,
+       context::delete_key,
+       context::delete_secret_key,
+       context::decrypt,
+       context::encrypt_with_flags,
+       context::sign_and_encrypt_with_flags,
+       context::sign_with_mode,
+       context::verify_opaque
     ],
-    Some(on_load)
-}
+    load = on_load
+);
 
 fn on_load<'a>(env: Env<'a>, _load_info: Term<'a>) -> bool {
     rustler::resource!(context::resource::ContextNifResource, env);

@@ -14,6 +14,13 @@ defmodule ExGpgme.Mixfile do
       description: description(),
       package: package(),
       compilers: Mix.compilers,
+      preferred_cli_env: [
+        check: :test,
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.html": :test,
+        "coveralls.json": :test
+      ],
       rustler_crates: rustler_crates(),
       dialyzer: [ignore_warnings: "dialyzer.ignore-warnings"],
       test_coverage: [tool: ExCoveralls]
