@@ -72,7 +72,10 @@ defmodule ExGpgme.Context do
       false
   """
   @spec armor?(context :: context) :: boolean
-  def armor?(_context), do: :erlang.nif_error(:nif_not_loaded)
+  def armor?(context), do: armor(context)
+
+  @spec armor(context :: context) :: boolean
+  def armor(_context), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   The function specifies if the output should be ASCII armored. By default, output is not ASCII armored.
@@ -100,7 +103,10 @@ defmodule ExGpgme.Context do
       false
   """
   @spec text_mode?(context :: context) :: boolean
-  def text_mode?(_context), do: :erlang.nif_error(:nif_not_loaded)
+  def text_mode?(context), do: text_mode(context)
+
+  @spec text_mode(context :: context) :: boolean
+  def text_mode(_context), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   The function specifies if canonical text mode should be used. By default, text mode is not used.
@@ -133,7 +139,10 @@ defmodule ExGpgme.Context do
       false
   """
   @spec offline?(context :: context) :: boolean
-  def offline?(_context), do: :erlang.nif_error(:nif_not_loaded)
+  def offline?(context), do: offline(context)
+
+  @spec offline(context :: context) :: boolean
+  def offline(_context), do: :erlang.nif_error(:nif_not_loaded)
 
   @doc """
   The function specifies if offline mode should be used. By default, offline mode is not used.
