@@ -223,10 +223,8 @@ pub fn delete_secret_key<'a>(env: Env<'a>, context_arg: Term, key_arc_arg: Term)
 }
 
 #[rustler::nif(schedule = "DirtyIo")]
-pub fn decrypt<'a>(env: Env<'a>, context_arg: Term, cyphertext_arg: Term) -> NifResult<Term<'a>> {
+pub fn decrypt<'a>(env: Env<'a>, context_arg: Term, cyphertext: String) -> NifResult<Term<'a>> {
     unpack_mutable_context!(context, context_arg);
-
-    let cyphertext: String = cyphertext_arg.decode::<String>()?;//.into_bytes();
 
     let mut cleartext: Vec<u8> = Vec::new();
 
