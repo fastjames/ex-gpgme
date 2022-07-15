@@ -14,30 +14,6 @@ macro_rules! try_gpgme {
     })
 }
 
-macro_rules! context_getter {
-    ($name:ident, $context:ident, $env:ident, $body:expr) => (
-        pub fn $name<'a>($env: $crate::rustler::Env<'a>, args: &[$crate::rustler::Term<'a>])
-        -> $crate::rustler::NifResult<$crate::rustler::Term<'a>> {
-            unpack_immutable_context!($context, args[0]);
-            Ok($body)
-        }
-    );
-}
-
-macro_rules! context_setter {
-    ($name:ident, $context:ident, $env:ident, $arg: ident, $type:ident, $body:expr) => (
-        pub fn $name<'a>($env: $crate::rustler::Env<'a>, args: &[$crate::rustler::Term<'a>])
-        -> $crate::rustler::NifResult<$crate::rustler::Term<'a>> {
-            unpack_mutable_context!($context, args[0]);
-            let $arg: $type = args[1].decode()?;
-
-            $body;
-
-            Ok(::context::helpers::atoms::ok().encode($env))
-        }
-    )
-}
-
 macro_rules! decode_context_result {
     ($name:ident, $env:ident) => (
         match String::from_utf8($name) {
