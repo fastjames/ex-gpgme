@@ -6,10 +6,10 @@ pub mod atoms {
 }
 
 macro_rules! try_gpgme {
-    ($expr:expr, $env:expr) => (match $expr {
+    ($expr:expr) => (match $expr {
         Ok(val) => val,
         Err(err) => {
-            return Ok((::context::helpers::atoms::error(), err.description().into_owned()).encode($env))
+            return Err(rustler::Error::Term(Box::new(err.description().into_owned())))
         }
     })
 }
