@@ -1,4 +1,4 @@
-use rustler::{Atom, Env, Term, NifResult, Encoder};
+use rustler::{Atom, Encoder, Env, Error, NifResult, Term};
 use rustler::resource::ResourceArc;
 use rustler::types::list::ListIterator;
 use gpgme::{Context, EncryptFlags};
@@ -24,13 +24,22 @@ mod atoms {
     }
 }
 
+#[derive(NifTuple)]
+pub struct FromProtocolResponse {
+    ok: Atom,
+    context: ResourceArc<resource::ContextNifResource>,
+}
+
 #[rustler::nif]
-pub fn from_protocol<'a>(env: Env<'a>, protocol_arg: Term) -> NifResult<Term<'a>> {
+pub fn from_protocol(protocol_arg: Term) -> NifResult<FromProtocolResponse> {
     let protocol = protocol::arg_to_protocol(protocol_arg)?;
 
     let context = try_gpgme!(Context::from_protocol(protocol));
 
-    Ok((atoms::ok(), resource::wrap_context(context)).encode(env))
+    Ok(FromProtocolResponse {
+        ok: atoms::ok(),
+        context: resource::wrap_context(context)
+    })
 }
 
 #[rustler::nif]
@@ -81,14 +90,22 @@ pub fn set_armor(context_arc: ResourceArc<resource::ContextNifResource>, yes: bo
     atoms::ok()
 }
 
+#[derive(NifTuple)]
+pub struct GetFlagResponse {
+    ok: Atom,
+    flag: String,
+}
 
 #[rustler::nif]
-pub fn get_flag<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, name: String) -> NifResult<Term<'a>> {
+pub fn get_flag(context_arc: ResourceArc<resource::ContextNifResource>, name: String) -> NifResult<GetFlagResponse> {
     unpack_immutable_context!(context, context_arc);
 
     match context.get_flag(name) {
-        Ok(result) => Ok((atoms::ok(), String::from(result)).encode(env)),
-        Err(_) => Ok((atoms::error(), atoms::not_set()).encode(env))
+        Ok(result) => Ok(GetFlagResponse {
+            ok: atoms::ok(),
+            flag: String::from(result)
+        }),
+        Err(_) => Err(Error::Term(Box::new(atoms::not_set())))
     }
 }
 
