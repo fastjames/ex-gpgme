@@ -17,14 +17,14 @@ pub fn arg_to_protocol(atoms: ListIterator) -> Result<EncryptFlags, Error> {
 
 pub fn string_to_flag(name: String) -> Result<EncryptFlags, Error> {
     match name.as_ref() {
-      "always_trust" => Ok(gpgme::ENCRYPT_ALWAYS_TRUST),
-      "expect_sign" => Ok(gpgme::ENCRYPT_EXPECT_SIGN),
-      "no_compress" => Ok(gpgme::ENCRYPT_NO_COMPRESS),
-      "no_encrypt_to" => Ok(gpgme::ENCRYPT_NO_ENCRYPT_TO),
-      "prepare" => Ok(gpgme::ENCRYPT_PREPARE),
-      "symmetric" => Ok(gpgme::ENCRYPT_SYMMETRIC),
-      "throw_keyids" => Ok(gpgme::ENCRYPT_THROW_KEYIDS),
-      "wrap" => Ok(gpgme::ENCRYPT_WRAP),
+      "always_trust" => Ok(gpgme::EncryptFlags::ALWAYS_TRUST),
+      "expect_sign" => Ok(gpgme::EncryptFlags::EXPECT_SIGN),
+      "no_compress" => Ok(gpgme::EncryptFlags::NO_COMPRESS),
+      "no_encrypt_to" => Ok(gpgme::EncryptFlags::NO_ENCRYPT_TO),
+      "prepare" => Ok(gpgme::EncryptFlags::PREPARE),
+      "symmetric" => Ok(gpgme::EncryptFlags::SYMMETRIC),
+      "throw_keyids" => Ok(gpgme::EncryptFlags::THROW_KEYIDS),
+      "wrap" => Ok(gpgme::EncryptFlags::WRAP),
       _ => Err(Error::BadArg)
     }
 }

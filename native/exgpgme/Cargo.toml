@@ -11,4 +11,4 @@ crate-type = ["dylib"]
 [dependencies]
 rustler = "0.25.0"
 lazy_static = "1.4.0"
-gpgme = { git = "https://github.com/johnschug/rust-gpgme.git" }
+gpgme = { git = "https://github.com/gpg-rs/gpgme.git"}

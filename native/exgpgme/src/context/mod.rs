@@ -176,9 +176,9 @@ pub fn import<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifRes
 
 #[rustler::nif(schedule = "DirtyIo")]
 pub fn find_key<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, fingerprint: String) -> NifResult<Term<'a>> {
-    unpack_immutable_context!(context, context_arc);
+    unpack_mutable_context!(context, context_arc);
 
-    let result = try_gpgme!(context.find_key(fingerprint));
+    let result = try_gpgme!(context.get_key(fingerprint));
 
     Ok((atoms::ok(), keys::wrap_key(result)).encode(env))
 }
