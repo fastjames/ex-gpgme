@@ -28,7 +28,7 @@ mod atoms {
 pub fn from_protocol<'a>(env: Env<'a>, protocol_arg: Term) -> NifResult<Term<'a>> {
     let protocol = protocol::arg_to_protocol(protocol_arg)?;
 
-    let context = try_gpgme!(Context::from_protocol(protocol), env);
+    let context = try_gpgme!(Context::from_protocol(protocol));
 
     Ok((atoms::ok(), resource::wrap_context(context)).encode(env))
 }
@@ -93,12 +93,12 @@ pub fn get_flag<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifR
 }
 
 #[rustler::nif]
-pub fn set_flag<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, name: String, value: String) -> NifResult<Term<'a>> {
+pub fn set_flag(context_arc: ResourceArc<resource::ContextNifResource>, name: String, value: String) -> NifResult<Atom> {
     unpack_mutable_context!(context, context_arc);
 
-    try_gpgme!(context.set_flag(name, value), env);
+    try_gpgme!(context.set_flag(name, value));
 
-    Ok(atoms::ok().encode(env))
+    Ok(atoms::ok())
 }
 
 #[rustler::nif]
@@ -113,20 +113,20 @@ pub fn engine_info<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextN
 }
 
 #[rustler::nif]
-pub fn set_engine_path<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, path: String) -> NifResult<Term<'a>> {
+pub fn set_engine_path(context_arc: ResourceArc<resource::ContextNifResource>, path: String) -> NifResult<Atom> {
     unpack_mutable_context!(context, context_arc);
-    try_gpgme!(context.set_engine_path(path), env);
+    try_gpgme!(context.set_engine_path(path));
 
-    Ok(atoms::ok().encode(env))
+    Ok(atoms::ok())
 }
 
 
 #[rustler::nif]
-pub fn set_engine_home_dir<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, home_dir: String) -> NifResult<Term<'a>> {
+pub fn set_engine_home_dir(context_arc: ResourceArc<resource::ContextNifResource>, home_dir: String) -> NifResult<Atom> {
     unpack_mutable_context!(context, context_arc);
-    try_gpgme!(context.set_engine_home_dir(home_dir), env);
+    try_gpgme!(context.set_engine_home_dir(home_dir));
 
-    Ok(atoms::ok().encode(env))
+    Ok(atoms::ok())
 }
 
 
@@ -138,21 +138,21 @@ pub fn get_pinentry_mode<'a>(env: Env<'a>, context_arc: ResourceArc<resource::Co
 
 
 #[rustler::nif]
-pub fn set_pinentry_mode<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, mode_arg: Term) -> NifResult<Term<'a>> {
+pub fn set_pinentry_mode(context_arc: ResourceArc<resource::ContextNifResource>, mode_arg: Term) -> NifResult<Atom> {
     unpack_mutable_context!(context, context_arc);
 
     let mode = pinentry_mode::arg_to_pinentry_mode(mode_arg)?;
 
-    try_gpgme!(context.set_pinentry_mode(mode), env);
+    try_gpgme!(context.set_pinentry_mode(mode));
 
-    Ok(atoms::ok().encode(env))
+    Ok(atoms::ok())
 }
 
 #[rustler::nif(schedule = "DirtyIo")]
 pub fn import<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, data: String) -> NifResult<Term<'a>> {
     unpack_mutable_context!(context, context_arc);
 
-    let result = try_gpgme!(context.import(data), env);
+    let result = try_gpgme!(context.import(data));
 
     Ok((atoms::ok(), transform_import_result(env, result)).encode(env))
 }
@@ -161,7 +161,7 @@ pub fn import<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifRes
 pub fn find_key<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, fingerprint: String) -> NifResult<Term<'a>> {
     unpack_immutable_context!(context, context_arc);
 
-    let result = try_gpgme!(context.find_key(fingerprint), env);
+    let result = try_gpgme!(context.find_key(fingerprint));
 
     Ok((atoms::ok(), keys::wrap_key(result)).encode(env))
 }
@@ -176,7 +176,7 @@ pub fn encrypt_with_flags<'a>(env: Env<'a>, context_arc: ResourceArc<resource::C
     let flags: EncryptFlags = encrypt_flags::arg_to_protocol(flags_arg.decode::<ListIterator>()?)?;
 
     let mut cyphertext: Vec<u8> = Vec::new();
-    try_gpgme!(context.encrypt_with_flags(recipients, data, &mut cyphertext, flags), env);
+    try_gpgme!(context.encrypt_with_flags(recipients, data, &mut cyphertext, flags));
 
     decode_context_result!(cyphertext, env)
 }
@@ -191,35 +191,35 @@ pub fn sign_and_encrypt_with_flags<'a>(env: Env<'a>, context_arc: ResourceArc<re
     let flags: EncryptFlags = encrypt_flags::arg_to_protocol(flags_arg.decode::<ListIterator>()?)?;
 
     let mut cyphertext: Vec<u8> = Vec::new();
-    try_gpgme!(context.sign_and_encrypt_with_flags(recipients, data, &mut cyphertext, flags), env);
+    try_gpgme!(context.sign_and_encrypt_with_flags(recipients, data, &mut cyphertext, flags));
 
     decode_context_result!(cyphertext, env)
 }
 
 #[rustler::nif(schedule = "DirtyIo")]
-pub fn delete_key<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, key_arc_arg: Term) -> NifResult<Term<'a>> {
+pub fn delete_key(context_arc: ResourceArc<resource::ContextNifResource>, key_arc_arg: Term) -> NifResult<Atom> {
     unpack_mutable_context!(context, context_arc);
 
     let key_arc = key_arc_arg.decode::<ResourceArc<keys::KeyResource>>()?;
     let key_ref = key_arc.deref();
     let key: &Key = &key_ref.key;
 
-    try_gpgme!(context.delete_key(key), env);
+    try_gpgme!(context.delete_key(key));
 
-    Ok(atoms::ok().encode(env))
+    Ok(atoms::ok())
 }
 
 #[rustler::nif(schedule = "DirtyIo")]
-pub fn delete_secret_key<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, key_arc_arg: Term) -> NifResult<Term<'a>> {
+pub fn delete_secret_key(context_arc: ResourceArc<resource::ContextNifResource>, key_arc_arg: Term) -> NifResult<Atom> {
     unpack_mutable_context!(context, context_arc);
 
     let key_arc = key_arc_arg.decode::<ResourceArc<keys::KeyResource>>()?;
     let key_ref = key_arc.deref();
     let key: &Key = &key_ref.key;
 
-    try_gpgme!(context.delete_secret_key(key), env);
+    try_gpgme!(context.delete_secret_key(key));
 
-    Ok(atoms::ok().encode(env))
+    Ok(atoms::ok())
 }
 
 #[rustler::nif(schedule = "DirtyIo")]
@@ -228,7 +228,7 @@ pub fn decrypt<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifRe
 
     let mut cleartext: Vec<u8> = Vec::new();
 
-    try_gpgme!(context.decrypt(cyphertext, &mut cleartext), env);
+    try_gpgme!(context.decrypt(cyphertext, &mut cleartext));
 
     decode_context_result!(cleartext, env)
 }
@@ -241,7 +241,7 @@ pub fn sign_with_mode<'a>(env: Env<'a>, context_arc: ResourceArc<resource::Conte
 
     let mut signature: Vec<u8> = Vec::new();
 
-    try_gpgme!(context.sign(mode, data, &mut signature), env);
+    try_gpgme!(context.sign(mode, data, &mut signature));
 
     decode_context_result!(signature, env)
 }
@@ -250,7 +250,7 @@ pub fn sign_with_mode<'a>(env: Env<'a>, context_arc: ResourceArc<resource::Conte
 pub fn verify_opaque<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, signature: String, data: String) -> NifResult<Term<'a>> {
     unpack_mutable_context!(context, context_arc);
 
-    let result = try_gpgme!(context.verify_opaque(signature, data), env);
+    let result = try_gpgme!(context.verify_opaque(signature, data));
 
     match transform_verification_result(env, result) {
         Ok(nif_result) => Ok((atoms::ok(), nif_result).encode(env)),
