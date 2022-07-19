@@ -105,7 +105,7 @@ pub fn transform_signature<'a>(env: Env<'a>, signature: Signature) -> Result<Ter
             .map_put(verified_by_chain_atom, signature.verified_by_chain().encode(env)).ok().unwrap()
             .map_put(pka_trust_atom, transform_pka_trust(env, signature.pka_trust())).ok().unwrap()
             .map_put(pka_address_atom, pka_address).ok().unwrap()
-            .map_put(validity_atom, transform_validity(env, signature.validity())).ok().unwrap()
+            .map_put(validity_atom, transform_validity(signature.validity()).encode(env)).ok().unwrap()
             .map_put(nonvalidity_reason_atom, nonvalidity_reason).ok().unwrap()
             .map_put(key_algorithm_atom, transform_key_algorithm(env, signature.key_algorithm())).ok().unwrap()
             .map_put(hash_algorithm_atom, transform_hash_algorithm(env, signature.hash_algorithm())).ok().unwrap()

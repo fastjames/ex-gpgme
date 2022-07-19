@@ -1,4 +1,4 @@
-use rustler::{Env, Term, Encoder};
+use rustler::Atom;
 use gpgme::Validity;
 
 mod atoms {
@@ -12,13 +12,13 @@ mod atoms {
     }
 }
 
-pub fn transform_validity(env: Env, validity: Validity) -> Term {
+pub fn transform_validity(validity: Validity) -> Atom {
     match validity {
-        Validity::Unknown => atoms::unknown().encode(env),
-        Validity::Undefined => atoms::undefined().encode(env),
-        Validity::Never => atoms::never().encode(env),
-        Validity::Marginal => atoms::marginal().encode(env),
-        Validity::Full => atoms::full().encode(env),
-        Validity::Ultimate => atoms::ultimate().encode(env),
+        Validity::Unknown => atoms::unknown(),
+        Validity::Undefined => atoms::undefined(),
+        Validity::Never => atoms::never(),
+        Validity::Marginal => atoms::marginal(),
+        Validity::Full => atoms::full(),
+        Validity::Ultimate => atoms::ultimate(),
     }
 }
