@@ -8,13 +8,13 @@ pub struct KeyResource {
 
 pub fn wrap_key(key: Key) -> ResourceArc<KeyResource> {
     ResourceArc::new(KeyResource{
-        key: key
+        key
     })
 }
 
 pub fn keys_not_empty(key_length: usize) -> Result<(), Error> {
     if key_length < 1 {
-        return Err(Error::BadArg);
+        Err(Error::BadArg)
     } else {
         Ok(())
     }
