@@ -194,7 +194,7 @@ defmodule ExGpgme.ContextTest do
   end
 
   describe "encrypt/2" do
-    @tag context: true, import_receiver_secret: true, armor: true
+    @tag context: true, import_all: true, armor: true
     test "encrypts correctly", %{context: context} do
       assert recipient = Context.find_key!(context, @receiver_fingerprint)
 
@@ -217,7 +217,7 @@ defmodule ExGpgme.ContextTest do
   end
 
   describe "decrypt/2" do
-    @tag context: true, import_receiver_secret: true, armor: true
+    @tag context: true, import_all: true, armor: true
     test "decrypts correctly", %{context: context} do
       assert {:ok, "Hello World!"} = Context.decrypt(context, @encrypted_receiver)
     end
@@ -281,7 +281,7 @@ defmodule ExGpgme.ContextTest do
   end
 
   describe "sign/3" do
-    @tag context: true, import_receiver_secret: true, armor: true
+    @tag context: true, import_all: true, armor: true
     test "creates correct signature", %{context: context} do
       assert {:ok, signature} = Context.sign(context, "Hello World")
       assert verification = Context.verify_opaque!(context, signature, "Hello World")
