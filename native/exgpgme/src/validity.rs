@@ -12,7 +12,7 @@ mod atoms {
     }
 }
 
-pub fn transform_validity<'a>(env: Env<'a>, validity: Validity) -> Term<'a> {
+pub fn transform_validity(env: Env, validity: Validity) -> Term {
     match validity {
         Validity::Unknown => atoms::unknown().encode(env),
         Validity::Undefined => atoms::undefined().encode(env),

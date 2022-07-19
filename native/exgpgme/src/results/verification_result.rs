@@ -12,7 +12,7 @@ mod atoms {
     }
 }
 
-pub fn transform_verification_result<'a>(env: Env<'a>, verification_result: VerificationResult) -> Result<Term<'a>, Utf8Error> {
+pub fn transform_verification_result(env: Env, verification_result: VerificationResult) -> Result<Term, Utf8Error> {
     let filename_atom = atoms::filename().encode(env);
     let signatures_atom = atoms::signatures().encode(env);
 

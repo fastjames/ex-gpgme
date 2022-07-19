@@ -17,7 +17,7 @@ mod atoms {
     }
 }
 
-pub fn transform_key_algorithm<'a>(env: Env<'a>, algorithm: KeyAlgorithm) -> Term<'a> {
+pub fn transform_key_algorithm(env: Env, algorithm: KeyAlgorithm) -> Term {
     match algorithm {
         KeyAlgorithm::Rsa => atoms::rsa().encode(env),
         KeyAlgorithm::RsaEncrypt => atoms::rsa_encrypt().encode(env),
