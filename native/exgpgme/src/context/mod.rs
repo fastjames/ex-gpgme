@@ -10,6 +10,7 @@ use protocol;
 use encrypt_flags;
 use engine;
 use pinentry_mode;
+use pinentry_mode::XPinentryMode;
 use sign_mode;
 use results::import_result::transform_import_result;
 
@@ -148,9 +149,9 @@ pub fn set_engine_home_dir(context_arc: ResourceArc<resource::ContextNifResource
 
 
 #[rustler::nif]
-pub fn get_pinentry_mode(env: Env, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term> {
+pub fn get_pinentry_mode(context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<XPinentryMode> {
     unpack_immutable_context!(context, context_arc);
-    Ok(pinentry_mode::pinentry_mode_to_term(context.pinentry_mode(), env))
+    Ok(XPinentryMode(context.pinentry_mode()))
 }
 
 

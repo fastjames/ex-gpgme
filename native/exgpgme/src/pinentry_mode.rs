@@ -14,14 +14,18 @@ mod atoms {
     }
 }
 
-pub fn pinentry_mode_to_term(pinentry_mode: PinentryMode, env: Env) -> Term {
-    match pinentry_mode {
-        PinentryMode::Default => atoms::default().encode(env),
-        PinentryMode::Ask => atoms::ask().encode(env),
-        PinentryMode::Cancel => atoms::cancel().encode(env),
-        PinentryMode::Error => atoms::error().encode(env),
-        PinentryMode::Loopback => atoms::loopback().encode(env),
-        PinentryMode::Other(other) => (atoms::other(), other).encode(env)
+pub struct XPinentryMode(pub PinentryMode);
+
+impl Encoder for XPinentryMode {
+    fn encode<'a>(&self, env: Env<'a>) -> Term<'a> {
+        match &self.0 {
+            PinentryMode::Default => atoms::default().encode(env),
+            PinentryMode::Ask => atoms::ask().encode(env),
+            PinentryMode::Cancel => atoms::cancel().encode(env),
+            PinentryMode::Error => atoms::error().encode(env),
+            PinentryMode::Loopback => atoms::loopback().encode(env),
+            PinentryMode::Other(other) => (atoms::other(), other).encode(env)
+        }
     }
 }
 
