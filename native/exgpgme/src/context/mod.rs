@@ -7,9 +7,11 @@ use std::ops::Deref;
 use results::verification_result::transform_verification_result;
 use keys;
 use protocol;
+use protocol::XProtocol;
 use encrypt_flags;
 use engine;
 use pinentry_mode;
+use pinentry_mode::XPinentryMode;
 use sign_mode;
 use results::import_result::transform_import_result;
 
@@ -43,9 +45,9 @@ pub fn from_protocol(protocol_arg: Term) -> NifResult<FromProtocolResponse> {
 }
 
 #[rustler::nif]
-pub fn get_protocol(env: Env, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term> {
+pub fn get_protocol(context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<XProtocol> {
     unpack_immutable_context!(context, context_arc);
-    Ok(protocol::protocol_to_nif(env, context.protocol()))
+    Ok(XProtocol(context.protocol()))
 }
 
 #[rustler::nif]
@@ -148,9 +150,9 @@ pub fn set_engine_home_dir(context_arc: ResourceArc<resource::ContextNifResource
 
 
 #[rustler::nif]
-pub fn get_pinentry_mode(env: Env, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term> {
+pub fn get_pinentry_mode(context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<XPinentryMode> {
     unpack_immutable_context!(context, context_arc);
-    Ok(pinentry_mode::pinentry_mode_to_term(context.pinentry_mode(), env))
+    Ok(XPinentryMode(context.pinentry_mode()))
 }
 
 

@@ -1,4 +1,4 @@
-use rustler::{Env, Term, Encoder};
+use rustler::Atom;
 use gpgme::results::PkaTrust;
 
 mod atoms {
@@ -10,11 +10,17 @@ mod atoms {
     }
 }
 
-pub fn transform_pka_trust(env: Env, trust: PkaTrust) -> Term {
+#[derive(NifUntaggedEnum)]
+pub enum PkaTrustResult {
+    Atom(Atom),
+    Tuple((Atom, u32))
+}
+
+pub fn transform_pka_trust(trust: PkaTrust) -> PkaTrustResult {
     match trust {
-        PkaTrust::Unknown => atoms::unknown().encode(env),
-        PkaTrust::Bad => atoms::bad().encode(env),
-        PkaTrust::Okay => atoms::okay().encode(env),
-        PkaTrust::Other(other) => (atoms::other(), other).encode(env),
+        PkaTrust::Unknown => PkaTrustResult::Atom(atoms::unknown()),
+        PkaTrust::Bad => PkaTrustResult::Atom(atoms::bad()),
+        PkaTrust::Okay => PkaTrustResult::Atom(atoms::okay()),
+        PkaTrust::Other(other) => PkaTrustResult::Tuple((atoms::other(), other)),
     }
 }

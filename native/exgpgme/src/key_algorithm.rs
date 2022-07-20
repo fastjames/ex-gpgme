@@ -1,4 +1,4 @@
-use rustler::{Env, Term, Encoder};
+use rustler::Atom;
 use gpgme::KeyAlgorithm;
 
 mod atoms {
@@ -17,18 +17,24 @@ mod atoms {
     }
 }
 
-pub fn transform_key_algorithm(env: Env, algorithm: KeyAlgorithm) -> Term {
+#[derive(NifUntaggedEnum)]
+pub enum KeyAlgorithmResult {
+    Atom(Atom),
+    Tuple((Atom, u32))
+}
+
+pub fn transform_key_algorithm(algorithm: KeyAlgorithm) -> KeyAlgorithmResult {
     match algorithm {
-        KeyAlgorithm::Rsa => atoms::rsa().encode(env),
-        KeyAlgorithm::RsaEncrypt => atoms::rsa_encrypt().encode(env),
-        KeyAlgorithm::RsaSign => atoms::rsa_sign().encode(env),
-        KeyAlgorithm::ElgamalEncrypt => atoms::elgamal_encrypt().encode(env),
-        KeyAlgorithm::Dsa => atoms::dsa().encode(env),
-        KeyAlgorithm::Ecc => atoms::ecc().encode(env),
-        KeyAlgorithm::Elgamal => atoms::elgamal().encode(env),
-        KeyAlgorithm::Ecdsa => atoms::ecdsa().encode(env),
-        KeyAlgorithm::Ecdh => atoms::ecdh().encode(env),
-        KeyAlgorithm::Eddsa => atoms::eddsa().encode(env),
-        KeyAlgorithm::Other(other) => (atoms::other(), other).encode(env),
+        KeyAlgorithm::Rsa => KeyAlgorithmResult::Atom(atoms::rsa()),
+        KeyAlgorithm::RsaEncrypt => KeyAlgorithmResult::Atom(atoms::rsa_encrypt()),
+        KeyAlgorithm::RsaSign => KeyAlgorithmResult::Atom(atoms::rsa_sign()),
+        KeyAlgorithm::ElgamalEncrypt => KeyAlgorithmResult::Atom(atoms::elgamal_encrypt()),
+        KeyAlgorithm::Dsa => KeyAlgorithmResult::Atom(atoms::dsa()),
+        KeyAlgorithm::Ecc => KeyAlgorithmResult::Atom(atoms::ecc()),
+        KeyAlgorithm::Elgamal => KeyAlgorithmResult::Atom(atoms::elgamal()),
+        KeyAlgorithm::Ecdsa => KeyAlgorithmResult::Atom(atoms::ecdsa()),
+        KeyAlgorithm::Ecdh => KeyAlgorithmResult::Atom(atoms::ecdh()),
+        KeyAlgorithm::Eddsa => KeyAlgorithmResult::Atom(atoms::eddsa()),
+        KeyAlgorithm::Other(other) => KeyAlgorithmResult::Tuple((atoms::other(), other)),
     }
 }

@@ -1,4 +1,4 @@
-use rustler::{Env, Term, Encoder};
+use rustler::Atom;
 use gpgme::HashAlgorithm;
 
 mod atoms {
@@ -22,23 +22,29 @@ mod atoms {
     }
 }
 
-pub fn transform_hash_algorithm(env: Env, algorithm: HashAlgorithm) -> Term {
+#[derive(NifUntaggedEnum)]
+pub enum HashAlgorithmResult {
+    Atom(Atom),
+    Tuple((Atom, u32))
+}
+
+pub fn transform_hash_algorithm(algorithm: HashAlgorithm) -> HashAlgorithmResult {
     match algorithm {
-        HashAlgorithm::None => atoms::none().encode(env),
-        HashAlgorithm::Md2 => atoms::md2().encode(env),
-        HashAlgorithm::Md4 => atoms::md4().encode(env),
-        HashAlgorithm::Md5 => atoms::md5().encode(env),
-        HashAlgorithm::Sha1 => atoms::sha1().encode(env),
-        HashAlgorithm::Sha224 => atoms::sha224().encode(env),
-        HashAlgorithm::Sha256 => atoms::sha256().encode(env),
-        HashAlgorithm::Sha384 => atoms::sha384().encode(env),
-        HashAlgorithm::Sha512 => atoms::sha512().encode(env),
-        HashAlgorithm::RipeMd160 => atoms::ripe_md160().encode(env),
-        HashAlgorithm::Tiger => atoms::tiger().encode(env),
-        HashAlgorithm::Haval => atoms::haval().encode(env),
-        HashAlgorithm::Crc32 => atoms::crc32().encode(env),
-        HashAlgorithm::Crc32Rfc1510 => atoms::crc32_rfc1510().encode(env),
-        HashAlgorithm::CrC24Rfc2440 => atoms::crc24_rfc2440().encode(env),
-        HashAlgorithm::Other(other) => (atoms::other(), other).encode(env),
+        HashAlgorithm::None => HashAlgorithmResult::Atom(atoms::none()),
+        HashAlgorithm::Md2 => HashAlgorithmResult::Atom(atoms::md2()),
+        HashAlgorithm::Md4 => HashAlgorithmResult::Atom(atoms::md4()),
+        HashAlgorithm::Md5 => HashAlgorithmResult::Atom(atoms::md5()),
+        HashAlgorithm::Sha1 => HashAlgorithmResult::Atom(atoms::sha1()),
+        HashAlgorithm::Sha224 => HashAlgorithmResult::Atom(atoms::sha224()),
+        HashAlgorithm::Sha256 => HashAlgorithmResult::Atom(atoms::sha256()),
+        HashAlgorithm::Sha384 => HashAlgorithmResult::Atom(atoms::sha384()),
+        HashAlgorithm::Sha512 => HashAlgorithmResult::Atom(atoms::sha512()),
+        HashAlgorithm::RipeMd160 => HashAlgorithmResult::Atom(atoms::ripe_md160()),
+        HashAlgorithm::Tiger => HashAlgorithmResult::Atom(atoms::tiger()),
+        HashAlgorithm::Haval => HashAlgorithmResult::Atom(atoms::haval()),
+        HashAlgorithm::Crc32 => HashAlgorithmResult::Atom(atoms::crc32()),
+        HashAlgorithm::Crc32Rfc1510 => HashAlgorithmResult::Atom(atoms::crc32_rfc1510()),
+        HashAlgorithm::CrC24Rfc2440 => HashAlgorithmResult::Atom(atoms::crc24_rfc2440()),
+        HashAlgorithm::Other(other) => HashAlgorithmResult::Tuple((atoms::other(), other)),
     }
 }
