@@ -1,4 +1,4 @@
-use rustler::{Atom, Encoder, Env, Term};
+use rustler::Atom;
 use gpgme::KeyAlgorithm;
 
 mod atoms {
@@ -17,18 +17,10 @@ mod atoms {
     }
 }
 
+#[derive(NifUntaggedEnum)]
 pub enum KeyAlgorithmResult {
     Atom(Atom),
     Tuple((Atom, u32))
-}
-
-impl Encoder for KeyAlgorithmResult {
-    fn encode<'a>(&self, env: Env<'a>) -> Term<'a> {
-        match self {
-            KeyAlgorithmResult::Atom(atom) => atom.encode(env),
-            KeyAlgorithmResult::Tuple(tuple) => tuple.encode(env),
-        }
-    }
 }
 
 pub fn transform_key_algorithm(algorithm: KeyAlgorithm) -> KeyAlgorithmResult {
