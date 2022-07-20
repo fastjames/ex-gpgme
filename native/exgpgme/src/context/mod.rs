@@ -7,6 +7,7 @@ use std::ops::Deref;
 use results::verification_result::transform_verification_result;
 use keys;
 use protocol;
+use protocol::XProtocol;
 use encrypt_flags;
 use engine;
 use pinentry_mode;
@@ -44,9 +45,9 @@ pub fn from_protocol(protocol_arg: Term) -> NifResult<FromProtocolResponse> {
 }
 
 #[rustler::nif]
-pub fn get_protocol(env: Env, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term> {
+pub fn get_protocol(context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<XProtocol> {
     unpack_immutable_context!(context, context_arc);
-    Ok(protocol::protocol_to_nif(env, context.protocol()))
+    Ok(XProtocol(context.protocol()))
 }
 
 #[rustler::nif]

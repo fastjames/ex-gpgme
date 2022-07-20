@@ -18,6 +18,25 @@ mod atoms {
     }
 }
 
+pub struct XProtocol(pub Protocol);
+
+impl Encoder for XProtocol {
+    fn encode<'a>(&self, env: Env<'a>) -> Term<'a> {
+        match &self.0 {
+            Protocol::OpenPgp => atoms::open_pgp().encode(env),
+            Protocol::Cms => atoms::cms().encode(env),
+            Protocol::GpgConf => atoms::gpg_conf().encode(env),
+            Protocol::Assuan => atoms::assuan().encode(env),
+            Protocol::G13 => atoms::g13().encode(env),
+            Protocol::UiServer => atoms::ui_server().encode(env),
+            Protocol::Spawn => atoms::spawn().encode(env),
+            Protocol::Default => atoms::default().encode(env),
+            Protocol::Unknown => atoms::unknown().encode(env),
+            Protocol::Other(other) => (atoms::other(), other).encode(env)
+        }
+    }
+}
+
 pub fn arg_to_protocol(arg: Term) -> Result<Protocol, Error> {
     match arg.get_type() {
         TermType::Atom => {
@@ -46,20 +65,5 @@ pub fn arg_to_protocol(arg: Term) -> Result<Protocol, Error> {
             }
         },
         _ => Err(Error::BadArg)
-    }
-}
-
-pub fn protocol_to_nif(env: Env, protocol: Protocol) -> Term {
-    match protocol {
-        Protocol::OpenPgp => atoms::open_pgp().encode(env),
-        Protocol::Cms => atoms::cms().encode(env),
-        Protocol::GpgConf => atoms::gpg_conf().encode(env),
-        Protocol::Assuan => atoms::assuan().encode(env),
-        Protocol::G13 => atoms::g13().encode(env),
-        Protocol::UiServer => atoms::ui_server().encode(env),
-        Protocol::Spawn => atoms::spawn().encode(env),
-        Protocol::Default => atoms::default().encode(env),
-        Protocol::Unknown => atoms::unknown().encode(env),
-        Protocol::Other(other) => (atoms::other(), other).encode(env)
     }
 }

@@ -2,7 +2,7 @@ use gpgme::engine::EngineInfo;
 use rustler::{Term, Env, Encoder};
 use rustler::types::elixir_struct;
 use std::str::Utf8Error;
-use protocol;
+use protocol::XProtocol;
 
 mod atoms {
     atoms! {
@@ -31,7 +31,7 @@ pub fn engine_info_to_term<'a>(engine_info: EngineInfo, env: Env<'a>) -> Result<
 
     Ok(
         elixir_struct::make_ex_struct(env, "Elixir.ExGpgme.Engine.EngineInfo").ok().unwrap()
-            .map_put(protocol_atom, protocol::protocol_to_nif(env, engine_info.protocol())).ok().unwrap()
+            .map_put(protocol_atom, XProtocol(engine_info.protocol()).encode(env)).ok().unwrap()
             .map_put(path_atom, get_engine_info(engine_info.path(), env)?).ok().unwrap()
             .map_put(home_dir_atom, get_engine_info(engine_info.home_dir(), env)?).ok().unwrap()
             .map_put(version_atom, get_engine_info(engine_info.version(), env)?).ok().unwrap()
