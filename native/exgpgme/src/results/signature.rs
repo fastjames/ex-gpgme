@@ -107,7 +107,7 @@ pub fn transform_signature<'a>(env: Env<'a>, signature: Signature) -> Result<Ter
             .map_put(pka_address_atom, pka_address).ok().unwrap()
             .map_put(validity_atom, transform_validity(signature.validity()).encode(env)).ok().unwrap()
             .map_put(nonvalidity_reason_atom, nonvalidity_reason).ok().unwrap()
-            .map_put(key_algorithm_atom, transform_key_algorithm(env, signature.key_algorithm())).ok().unwrap()
+            .map_put(key_algorithm_atom, transform_key_algorithm(signature.key_algorithm()).encode(env)).ok().unwrap()
             .map_put(hash_algorithm_atom, transform_hash_algorithm(env, signature.hash_algorithm())).ok().unwrap()
             .map_put(policy_url_atom, policy_url).ok().unwrap()
             .map_put(notations_atom, notations).ok().unwrap()
