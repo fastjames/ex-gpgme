@@ -43,7 +43,7 @@ pub fn from_protocol(protocol_arg: Term) -> NifResult<FromProtocolResponse> {
 }
 
 #[rustler::nif]
-pub fn get_protocol<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term<'a>> {
+pub fn get_protocol(env: Env, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term> {
     unpack_immutable_context!(context, context_arc);
     Ok(protocol::protocol_to_nif(env, context.protocol()))
 }
@@ -119,7 +119,7 @@ pub fn set_flag(context_arc: ResourceArc<resource::ContextNifResource>, name: St
 }
 
 #[rustler::nif]
-pub fn engine_info<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term<'a>> {
+pub fn engine_info(env: Env, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term> {
     unpack_immutable_context!(context, context_arc);
     Ok(
         match engine::engine_info_to_term(context.engine_info(), env) {
@@ -148,7 +148,7 @@ pub fn set_engine_home_dir(context_arc: ResourceArc<resource::ContextNifResource
 
 
 #[rustler::nif]
-pub fn get_pinentry_mode<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term<'a>> {
+pub fn get_pinentry_mode(env: Env, context_arc: ResourceArc<resource::ContextNifResource>) -> NifResult<Term> {
     unpack_immutable_context!(context, context_arc);
     Ok(pinentry_mode::pinentry_mode_to_term(context.pinentry_mode(), env))
 }
@@ -166,7 +166,7 @@ pub fn set_pinentry_mode(context_arc: ResourceArc<resource::ContextNifResource>,
 }
 
 #[rustler::nif(schedule = "DirtyIo")]
-pub fn import<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, data: String) -> NifResult<Term<'a>> {
+pub fn import(env: Env, context_arc: ResourceArc<resource::ContextNifResource>, data: String) -> NifResult<Term> {
     unpack_mutable_context!(context, context_arc);
 
     let result = try_gpgme!(context.import(data));
@@ -175,7 +175,7 @@ pub fn import<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifRes
 }
 
 #[rustler::nif(schedule = "DirtyIo")]
-pub fn find_key<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, fingerprint: String) -> NifResult<Term<'a>> {
+pub fn find_key(env: Env, context_arc: ResourceArc<resource::ContextNifResource>, fingerprint: String) -> NifResult<Term> {
     unpack_mutable_context!(context, context_arc);
 
     let result = try_gpgme!(context.get_key(fingerprint));
@@ -240,7 +240,7 @@ pub fn delete_secret_key(context_arc: ResourceArc<resource::ContextNifResource>,
 }
 
 #[rustler::nif(schedule = "DirtyIo")]
-pub fn decrypt<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, cyphertext: String) -> NifResult<Term<'a>> {
+pub fn decrypt(env: Env, context_arc: ResourceArc<resource::ContextNifResource>, cyphertext: String) -> NifResult<Term> {
     unpack_mutable_context!(context, context_arc);
 
     let mut cleartext: Vec<u8> = Vec::new();
@@ -264,7 +264,7 @@ pub fn sign_with_mode<'a>(env: Env<'a>, context_arc: ResourceArc<resource::Conte
 }
 
 #[rustler::nif(schedule = "DirtyIo")]
-pub fn verify_opaque<'a>(env: Env<'a>, context_arc: ResourceArc<resource::ContextNifResource>, signature: String, data: String) -> NifResult<Term<'a>> {
+pub fn verify_opaque(env: Env, context_arc: ResourceArc<resource::ContextNifResource>, signature: String, data: String) -> NifResult<Term> {
     unpack_mutable_context!(context, context_arc);
 
     let result = try_gpgme!(context.verify_opaque(signature, data));

@@ -10,7 +10,7 @@ mod atoms {
     }
 }
 
-pub fn transform_pka_trust<'a>(env: Env<'a>, trust: PkaTrust) -> Term<'a> {
+pub fn transform_pka_trust(env: Env, trust: PkaTrust) -> Term {
     match trust {
         PkaTrust::Unknown => atoms::unknown().encode(env),
         PkaTrust::Bad => atoms::bad().encode(env),

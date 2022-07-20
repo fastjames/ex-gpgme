@@ -14,7 +14,7 @@ mod atoms {
     }
 }
 
-pub fn pinentry_mode_to_term<'a>(pinentry_mode: PinentryMode, env: Env<'a>) -> Term<'a> {
+pub fn pinentry_mode_to_term(pinentry_mode: PinentryMode, env: Env) -> Term {
     match pinentry_mode {
         PinentryMode::Default => atoms::default().encode(env),
         PinentryMode::Ask => atoms::ask().encode(env),

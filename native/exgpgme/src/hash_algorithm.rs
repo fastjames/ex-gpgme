@@ -22,7 +22,7 @@ mod atoms {
     }
 }
 
-pub fn transform_hash_algorithm<'a>(env: Env<'a>, algorithm: HashAlgorithm) -> Term<'a> {
+pub fn transform_hash_algorithm(env: Env, algorithm: HashAlgorithm) -> Term {
     match algorithm {
         HashAlgorithm::None => atoms::none().encode(env),
         HashAlgorithm::Md2 => atoms::md2().encode(env),
