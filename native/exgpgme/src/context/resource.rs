@@ -16,6 +16,7 @@ pub fn wrap_context(context: Context) -> ResourceArc<ContextNifResource> {
 
 macro_rules! unpack_immutable_context {
     ($context:ident, $context_arc:expr) => (
+        print!("unpack_immutable_context: start");
         let $context = $context_arc.deref().context.read().unwrap();
     );
 }

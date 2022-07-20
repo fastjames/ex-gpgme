@@ -34,9 +34,20 @@ pub struct FromProtocolResponse {
 
 #[rustler::nif]
 pub fn from_protocol(protocol_arg: Term) -> NifResult<FromProtocolResponse> {
+    eprintln!("from_protocol: start");
     let protocol = protocol::arg_to_protocol(protocol_arg)?;
+    eprintln!("from_protocol: after arg transform");
 
-    let context = try_gpgme!(Context::from_protocol(protocol));
+    // let context = try_gpgme!(Context::from_protocol(protocol));
+    let result = Context::from_protocol(protocol);
+    eprintln!("from_protocol: after from_protocol callout");
+
+    let context = match result {
+        Ok(context) => context,
+        Err(err) => return Err(rustler::Error::Term(Box::new(err.description().into_owned())))
+    };
+
+    eprintln!("from_protocol: after try_gpgme");
 
     Ok(FromProtocolResponse {
         ok: atoms::ok(),

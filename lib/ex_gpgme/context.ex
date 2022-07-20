@@ -42,6 +42,7 @@ defmodule ExGpgme.Context do
   """
   @spec from_protocol!(protocol :: ExGpgme.protocol()) :: context | no_return
   def from_protocol!(protocol) do
+    IO.inspect(protocol, label: "elixir from_protocol!: passed protocol")
     case from_protocol(protocol) do
       {:ok, result} -> result
       {:error, error} -> raise error
