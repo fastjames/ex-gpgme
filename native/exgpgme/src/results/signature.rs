@@ -103,7 +103,7 @@ pub fn transform_signature<'a>(env: Env<'a>, signature: Signature) -> Result<Ter
             .map_put(never_expires_atom, signature.never_expires().encode(env)).ok().unwrap()
             .map_put(is_wrong_key_usage_atom, signature.is_wrong_key_usage().encode(env)).ok().unwrap()
             .map_put(verified_by_chain_atom, signature.verified_by_chain().encode(env)).ok().unwrap()
-            .map_put(pka_trust_atom, transform_pka_trust(env, signature.pka_trust())).ok().unwrap()
+            .map_put(pka_trust_atom, transform_pka_trust(signature.pka_trust()).encode(env)).ok().unwrap()
             .map_put(pka_address_atom, pka_address).ok().unwrap()
             .map_put(validity_atom, transform_validity(signature.validity()).encode(env)).ok().unwrap()
             .map_put(nonvalidity_reason_atom, nonvalidity_reason).ok().unwrap()
