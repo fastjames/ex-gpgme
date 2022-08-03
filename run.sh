@@ -1,0 +1,1 @@
+/Users/jim/src/fastjames/otp/bin/cerl -kernel shell_history enabled -pa $(find /Users/jim/.asdf/installs/elixir/1.13.4-otp-23/lib/*/ebin) -elixir ansi_enabled true -noshell -s elixir start_cli -- -extra /Users/jim/.asdf/shims/mix test test/ex-gpgme/context_test.exs

@@ -69,7 +69,7 @@ dependencies = [
 [[package]]
 name = "gpgme"
 version = "0.10.0"
-source = "git+https://github.com/gpg-rs/gpgme.git#fb4108fb8f8069694d511e9b501feda27eb03fae"
+source = "git+https://github.com/fastjames/gpgme.git?branch=debug#fc6ffa41ff8439126d976ee21ba2552520b5460c"
 dependencies = [
  "bitflags",
  "conv",
@@ -85,7 +85,7 @@ dependencies = [
 [[package]]
 name = "gpgme-sys"
 version = "0.10.0"
-source = "git+https://github.com/gpg-rs/gpgme.git#fb4108fb8f8069694d511e9b501feda27eb03fae"
+source = "git+https://github.com/fastjames/gpgme.git?branch=debug#fc6ffa41ff8439126d976ee21ba2552520b5460c"
 dependencies = [
  "libc",
  "libgpg-error-sys",
@@ -225,9 +225,9 @@ dependencies = [
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.1"
+version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5bd2fe26506023ed7b5e1e315add59d6f584c621d037f9368fea9cfb988f368c"
+checksum = "15c61ba63f9235225a22310255a29b806b907c9b8c964bcbd0a2c70f3f2deea7"
 
 [[package]]
 name = "unreachable"

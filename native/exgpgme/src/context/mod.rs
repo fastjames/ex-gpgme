@@ -32,11 +32,10 @@ pub struct FromProtocolResponse {
     context: ResourceArc<resource::ContextNifResource>,
 }
 
-#[rustler::nif]
+#[rustler::nif(schedule = "DirtyIo")]
 pub fn from_protocol(protocol_arg: Term) -> NifResult<FromProtocolResponse> {
-    eprintln!("from_protocol: start");
     let protocol = protocol::arg_to_protocol(protocol_arg)?;
-    eprintln!("from_protocol: after arg transform");
+    eprintln!("from_protocol: after arg transform protocol is {}", protocol);
 
     // let context = try_gpgme!(Context::from_protocol(protocol));
     let result = Context::from_protocol(protocol);

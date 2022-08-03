@@ -65,7 +65,8 @@ defmodule ExGpgme.Mixfile do
 
   defp deps do
     [
-      {:rustler, "~> 0.25.0"},
+      # {:rustler, "~> 0.25.0"},
+      {:rustler, github: "rusterlium/rustler", branch: "master", sparse: "rustler_mix"},
       {:ex_doc, ">= 0.0.0", only: [:dev, :test], runtime: false},
       {:inch_ex, ">= 0.0.0", only: :docs, runtime: false},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
